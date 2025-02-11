@@ -1,1 +1,47 @@
-# AI-Meeting-Assistant
+# AI Meeting Assistant - Development Roadmap
+
+## **1. Core UI & Structure**
+- [ ] Create a single UI with:
+  - [ ] **Live Transcription & Summarization Window** (for meeting notes).
+  - [ ] **AI Query Button & Response Window** (for on-demand GPT responses).
+  - [ ] **Start/Stop buttons** for both features.
+
+
+---
+
+## **2. Speech-to-Text System**
+- [ ] Capture external audio (microphone/system audio).
+- [ ] Process audio through **Google Cloud Speech-to-Text**.
+- [ ] Display real-time transcription in the UI.
+
+---
+
+## **3. Live Summarization (Meeting Notes)**
+- [ ] Use NLP models to continuously summarize discussions.
+- [ ] Dynamically update UI with key points.
+- [ ] Optimize for low latency and useful insights.
+
+---
+
+## **4. AI Query Feature (On-Demand Responses)**
+- [ ] Implement a **secondary UI section** with a button to trigger AI queries.
+- [ ] Once the button is pressed:
+  - [ ] Capture the next spoken phrase.
+  - [ ] Send it as a structured GPT request.
+  - [ ] Display GPT’s response in a separate answer window.
+- [ ] Allow stopping/resetting queries easily.
+
+---
+
+## **5. Speaker Identification**
+- [ ] Tag transcriptions with speaker labels.
+- [ ] Ensure correct speaker attribution for both summarization and AI queries.
+
+---
+
+## **6. Final Optimizations & Enhancements**
+- [ ] Improve processing speed and UI responsiveness.
+- [ ] Refine GPT prompts for better summarization & query handling.
+- [ ] Add export options (PDF, email, API integration).
+- [ ] Conduct real-world tests in live meetings.
+- [ ] Store meeting notes locally to maintain a history of discussions.
