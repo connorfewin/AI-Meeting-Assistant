@@ -13,6 +13,7 @@
 - [x] Capture external audio (microphone/system audio).
 - [x] Process audio through **Google Cloud Speech-to-Text**.
 - [x] Display real-time transcription in the UI.
+- [ ] Capture audio from meetings / videos
 
 ---
 
