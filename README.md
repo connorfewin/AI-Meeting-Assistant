@@ -1,10 +1,10 @@
 # AI Meeting Assistant - Development Roadmap
 
 ## **1. Core UI & Structure**
-- [ ] Create a single UI with:
-  - [ ] **Live Transcription & Summarization Window** (for meeting notes).
-  - [ ] **AI Query Button & Response Window** (for on-demand GPT responses).
-  - [ ] **Start/Stop buttons** for both features.
+- [x] Create a single UI with:
+  - [x]**Live Transcription & Summarization Window** (for meeting notes).
+  - [x] **AI Query Button & Response Window** (for on-demand GPT responses).
+  - [x] **Start/Stop buttons** for both features.
 
 
 ---
