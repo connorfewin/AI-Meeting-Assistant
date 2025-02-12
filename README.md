@@ -2,7 +2,7 @@
 
 ## **1. Core UI & Structure**
 - [x] Create a single UI with:
-  - [x]**Live Transcription & Summarization Window** (for meeting notes).
+  - [x] **Live Transcription & Summarization Window** (for meeting notes).
   - [x] **AI Query Button & Response Window** (for on-demand GPT responses).
   - [x] **Start/Stop buttons** for both features.
 
