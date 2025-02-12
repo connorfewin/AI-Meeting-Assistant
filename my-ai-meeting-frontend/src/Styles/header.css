@@ -1,0 +1,29 @@
+/* header.css */
+
+.app-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    width: 100%;
+    /* border-bottom: 2px solid var(--color-text); example */
+    box-sizing: border-box;
+    border-radius: 10px;
+    /* Another background color, if desired */
+    background-color: var(--color-bg1);
+  }
+  
+  .app-title {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+  
+  .app-subtitle {
+    margin: 5px 0 0;
+    font-size: 1.1rem;
+    color: var(--color-bg3); /* use the primary color for a subtle highlight */
+    font-weight: 400;
+  }
+  

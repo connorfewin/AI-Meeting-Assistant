@@ -1,0 +1,26 @@
+:root {
+  /* Global color palette */
+  --color-bg1: #ffffff;
+  --color-bg2: #dbdad2;
+  --color-bg3: #a1a292;
+  --color-primary: #609173;
+  --color-text: #535345;
+}
+
+/* Existing reset & base styles */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+    'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Example: set the body background color using one of our variables */
+  background-color: var(--color-bg1);
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}

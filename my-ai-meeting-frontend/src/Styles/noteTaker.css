@@ -1,0 +1,30 @@
+.note-taker-container {
+    /* 
+      So the title and icon appear in one line 
+      with space-between: 
+    */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  
+  .note-taker-title {
+    margin: 0; 
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  
+  .mic-icon {
+    cursor: pointer;
+    color: #666; /* default color; tweak as needed */
+    /* If you want bigger icons: font-size: 2rem; */
+  
+    /* Hover effect (optional) */
+    transition: color 0.2s;
+  }
+  .mic-icon:hover {
+    color: #000; 
+  }
+  

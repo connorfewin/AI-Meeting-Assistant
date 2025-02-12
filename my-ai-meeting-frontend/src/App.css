@@ -1,0 +1,58 @@
+/* App.css */
+
+/* Ensure the #root also fills its container */
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+/* Main app layout */
+.App {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  /* Use a color variable for the header background */
+  background-color: var(--color-bg2);
+}
+
+/* Header container ~10% height */
+.header-container {
+  flex: 0 0 10%;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 10px 10px 0px;
+}
+
+/* Panels container ~90% height */
+.panel-container {
+  flex: 1;
+  display: flex;       /* side-by-side layout */
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow: hidden;    /* no page-level scrollbar */
+}
+
+/* Each panel */
+.panel {
+  width: 50%;
+  height: 100%;
+  padding: 10px;
+  border-radius: 15px;
+  background-color: var(--color-bg1);
+  box-sizing: border-box;
+  overflow: auto;     /* internal scrolling if needed */
+}
+
+/* Gap (margin) only on the second panel */
+.panel.brain {
+  margin-left: 15px;
+}
+
+h1 {
+  color: var(--color-text);
+}
