@@ -10,9 +10,9 @@
 ---
 
 ## **2. Speech-to-Text System**
-- [ ] Capture external audio (microphone/system audio).
-- [ ] Process audio through **Google Cloud Speech-to-Text**.
-- [ ] Display real-time transcription in the UI.
+- [x] Capture external audio (microphone/system audio).
+- [x] Process audio through **Google Cloud Speech-to-Text**.
+- [x] Display real-time transcription in the UI.
 
 ---
 
