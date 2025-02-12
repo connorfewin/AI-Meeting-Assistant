@@ -1,0 +1,11 @@
+{
+  "name": "ai-meeting-assistant",
+  "version": "1.0.0",
+  "description": "Top-level package.json to run client & server",
+  "scripts": {
+    "start": "concurrently \"npm run start --prefix my-ai-meeting-frontend\" \"npm run dev --prefix Server\""
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
+}
