@@ -17,7 +17,9 @@
 ---
 
 ## **3. Live Summarization (Meeting Notes)**
-- [ ] Use NLP models to continuously summarize discussions.
+- [x] Use NLP models to continuously restore punctuation to the text.
+- [x] Create line breaks on pauses
+- [ ] Use GPT to summarize paragraphs
 - [ ] Dynamically update UI with key points.
 - [ ] Optimize for low latency and useful insights.
 
