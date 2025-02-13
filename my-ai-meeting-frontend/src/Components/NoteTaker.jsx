@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+// NoteTaker.jsx
+import React, { useEffect, useRef, useState } from "react";
 import MicIcon from "@mui/icons-material/Mic";
 import MicOffIcon from "@mui/icons-material/MicOff";
 import io from "socket.io-client";
@@ -6,49 +7,60 @@ import "../Styles/noteTaker.css";
 
 export const NoteTaker = () => {
   const [isMicOn, setIsMicOn] = useState(false);
-  const [socket, setSocket] = useState(null);
-
-  // Keep final and partial transcripts separate
   const [fullTranscript, setFullTranscript] = useState("");
   const [currentPartial, setCurrentPartial] = useState("");
 
-  // Audio references
-  const [mediaStream, setMediaStream] = useState(null);
-  const [audioContext, setAudioContext] = useState(null);
-  const [processor, setProcessor] = useState(null);
+  const socketRef = useRef(null);
+  const mediaStreamRef = useRef(null);
+  const audioContextRef = useRef(null);
+  const processorRef = useRef(null);
+  const pauseTimerRef = useRef(null);
+  const currentPartialRef = useRef("");
+
+  // Keep currentPartialRef in sync with state
+  useEffect(() => {
+    currentPartialRef.current = currentPartial;
+  }, [currentPartial]);
 
   useEffect(() => {
-    const newSocket = io("http://localhost:5000");
-    setSocket(newSocket);
+    socketRef.current = io("http://localhost:5000");
 
-    // Listen for transcription data from server
-    newSocket.on("speechData", (data) => {
-      console.log("Received speechData event:", data);
-      const { transcript: text, isFinal } = data;
-
+    const handleSpeechData = ({ transcript, isFinal }) => {
       if (isFinal) {
-        // Append the final text to our fullTranscript
-        setFullTranscript((prev) => prev + text.trim() + " ");
-        // Clear partial
+        setFullTranscript((prev) => prev + transcript.trim() + " ");
         setCurrentPartial("");
       } else {
-        // Overwrite current partial
-        setCurrentPartial(text);
+        setCurrentPartial(transcript);
       }
-    });
+      // Reset the pause timer on every speechData event
+      if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
+      pauseTimerRef.current = setTimeout(() => {
+        const partial = currentPartialRef.current;
+        if (partial) {
+          setFullTranscript((prev) => prev + partial.trim() + "\n");
+          setCurrentPartial("");
+        } else {
+          setFullTranscript((prev) =>
+            prev.endsWith("\n") ? prev : prev.trim() + "\n\n"
+          );
+        }
+      }, 3000);
+    };
 
-    newSocket.on("googleCloudStreamError", (errMsg) => {
+    socketRef.current.on("speechData", handleSpeechData);
+
+    socketRef.current.on("googleCloudStreamError", (errMsg) => {
       console.error("Speech Stream Error:", errMsg);
     });
 
-    // Cleanup
     return () => {
-      newSocket.disconnect();
+      socketRef.current.disconnect();
+      if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
     };
   }, []);
 
   const startRecording = async () => {
-    if (!socket) return;
+    if (!socketRef.current) return;
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const context = new (window.AudioContext || window.webkitAudioContext)();
@@ -58,35 +70,37 @@ export const NoteTaker = () => {
       scriptProcessor.onaudioprocess = (e) => {
         const inputData = e.inputBuffer.getChannelData(0);
         const pcm16Data = float32ToInt16(inputData);
-        socket.emit("sendAudioData", pcm16Data);
+        socketRef.current.emit("sendAudioData", pcm16Data);
       };
 
       source.connect(scriptProcessor);
       scriptProcessor.connect(context.destination);
 
-      setMediaStream(stream);
-      setAudioContext(context);
-      setProcessor(scriptProcessor);
+      mediaStreamRef.current = stream;
+      audioContextRef.current = context;
+      processorRef.current = scriptProcessor;
 
-      socket.emit("startGoogleCloudStream");
+      socketRef.current.emit("startGoogleCloudStream");
     } catch (err) {
       console.error("Error accessing microphone:", err);
     }
   };
 
   const stopRecording = () => {
-    if (!socket) return;
-    socket.emit("stopGoogleCloudStream");
+    if (!socketRef.current) return;
 
-    // Disconnect
-    if (processor) processor.disconnect();
-    if (audioContext && audioContext.state !== "closed") audioContext.close();
-    if (mediaStream) {
-      mediaStream.getTracks().forEach((track) => track.stop());
+    socketRef.current.emit("stopGoogleCloudStream");
+
+    if (processorRef.current) processorRef.current.disconnect();
+    if (audioContextRef.current && audioContextRef.current.state !== "closed")
+      audioContextRef.current.close();
+    if (mediaStreamRef.current) {
+      mediaStreamRef.current.getTracks().forEach((track) => track.stop());
     }
-    setProcessor(null);
-    setAudioContext(null);
-    setMediaStream(null);
+
+    processorRef.current = null;
+    audioContextRef.current = null;
+    mediaStreamRef.current = null;
   };
 
   const handleMicToggle = () => {
@@ -99,28 +113,24 @@ export const NoteTaker = () => {
     }
   };
 
-  // Helper: Convert Float32 to Int16
+  // Convert Float32Array audio data to Int16Array
   const float32ToInt16 = (float32Array) => {
     const int16Array = new Int16Array(float32Array.length);
     for (let i = 0; i < float32Array.length; i++) {
-      let s = Math.max(-1, Math.min(1, float32Array[i]));
-      s = s < 0 ? s * 0x8000 : s * 0x7fff;
-      int16Array[i] = s;
+      const s = Math.max(-1, Math.min(1, float32Array[i]));
+      int16Array[i] = s < 0 ? s * 0x8000 : s * 0x7fff;
     }
     return int16Array;
   };
 
   return (
     <div className="note-taker-container">
-      {/* Header row: Title left, mic icon right */}
       <div className="note-taker-header">
         <h1 className="note-taker-title">Note Taker</h1>
         <div className="mic-icon" onClick={handleMicToggle}>
           {isMicOn ? <MicIcon /> : <MicOffIcon />}
         </div>
       </div>
-
-      {/* Transcript box below */}
       <div className="transcript-box">
         <pre>{fullTranscript + currentPartial}</pre>
       </div>
