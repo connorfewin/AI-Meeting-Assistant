@@ -5,7 +5,7 @@ import { FaSun, FaMoon } from "react-icons/fa";
 
 export const ToggleTheme = () => {
   // Track whether we are in dark mode (true) or light mode (false)
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(true);
 
   // Whenever `isDark` changes, update the HTML attribute
   useEffect(() => {

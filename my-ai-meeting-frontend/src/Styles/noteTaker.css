@@ -55,5 +55,5 @@
   font-family: "Roboto", "Helvetica Neue", sans-serif; /* Some modern sans-serif */
   font-size: 1rem;
   line-height: 1.4; /* Slightly looser line spacing */
-  color: #333;
+  color: var(--color-text);
 }
