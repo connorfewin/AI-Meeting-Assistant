@@ -6,11 +6,12 @@
   border-radius: 8px;
 }
 
-/* Header row: title on the left, mic icon on the right */
+/* Header row: stays at the top */
 .note-taker-header {
+  flex-shrink: 0;
   display: flex;
   width: 100%;
-  justify-content: space-between; /* Aligns title and mic icon */
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
 }
@@ -28,23 +29,34 @@
   font-size: 1.8rem;
 }
 
-/* Transcript display area */
+/* Transcript display area: scrollable content area only */
+.transcript-display {
+  flex-grow: 1;
+  overflow-y: auto;
+  
+  /* Hide scrollbar in Firefox */
+  scrollbar-width: none; 
+  /* Hide scrollbar in IE, Edge */
+  -ms-overflow-style: none;
+}
+
+.transcript-display::-webkit-scrollbar {
+  display: none;  /* Hide scrollbar in Chrome, Safari and Opera */
+}
+
+/* Transcript box styles for each paragraph */
 .transcript-box {
-  margin-top: 1rem;
   width: 100%;
   overflow-x: hidden;
-  overflow-y: auto;
   border-radius: 4px;
 }
 
-/* Transcript text styling */
 .transcript-box pre {
-  white-space: pre-wrap;      /* Allow text wrapping */
-  word-wrap: break-word;      /* Prevent overflow on long words */
+  white-space: pre-wrap;
+  word-wrap: break-word;
   margin: 0;
-  font-family: 'Inter', sans-serif; /* Highly readable modern font */
-  font-size: 1rem;            /* Adjust size as needed */
-  line-height: 1.6;           /* Improved spacing for readability */
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
   color: var(--color-text);
 }
-

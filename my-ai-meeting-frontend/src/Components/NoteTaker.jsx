@@ -1,48 +1,61 @@
-// NoteTaker.jsx
 import React, { useEffect, useRef, useState } from "react";
 import MicIcon from "@mui/icons-material/Mic";
 import MicOffIcon from "@mui/icons-material/MicOff";
 import io from "socket.io-client";
 import "../Styles/noteTaker.css";
+import { TranscriptParagraph } from "./TranscriptParagraph";
 
 export const NoteTaker = () => {
   const [isMicOn, setIsMicOn] = useState(false);
-  const [fullTranscript, setFullTranscript] = useState("");
-  const [currentPartial, setCurrentPartial] = useState("");
+  const [paragraphs, setParagraphs] = useState([]); // Finished paragraphs.
+  const [currentParagraph, setCurrentParagraph] = useState(""); // Accumulated final transcript.
+  const [currentInterim, setCurrentInterim] = useState(""); // Latest interim transcript.
 
   const socketRef = useRef(null);
   const mediaStreamRef = useRef(null);
   const audioContextRef = useRef(null);
   const processorRef = useRef(null);
   const pauseTimerRef = useRef(null);
-  const currentPartialRef = useRef("");
+  
+  // Ref for the transcript display container
+  const transcriptDisplayRef = useRef(null);
 
-  // Keep currentPartialRef in sync with state
+  // Refs to keep our state values updated in the timer callback.
+  const currentParagraphRef = useRef("");
+  const currentInterimRef = useRef("");
+
   useEffect(() => {
-    currentPartialRef.current = currentPartial;
-  }, [currentPartial]);
+    currentParagraphRef.current = currentParagraph;
+  }, [currentParagraph]);
+
+  useEffect(() => {
+    currentInterimRef.current = currentInterim;
+  }, [currentInterim]);
 
   useEffect(() => {
     socketRef.current = io("http://localhost:5000");
 
     const handleSpeechData = ({ transcript, isFinal }) => {
       if (isFinal) {
-        setFullTranscript((prev) => prev + transcript.trim() + " ");
-        setCurrentPartial("");
+        // Append final transcript to the working paragraph.
+        setCurrentParagraph((prev) => prev + transcript.trim() + " ");
+        // Clear any interim text.
+        setCurrentInterim("");
       } else {
-        setCurrentPartial(transcript);
+        // For interim results, update the interim text only.
+        setCurrentInterim(transcript);
       }
-      // Reset the pause timer on every speechData event
+
+      // Reset the pause timer on every speech event.
       if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
       pauseTimerRef.current = setTimeout(() => {
-        const partial = currentPartialRef.current;
-        if (partial) {
-          setFullTranscript((prev) => prev + partial.trim() + "\n");
-          setCurrentPartial("");
-        } else {
-          setFullTranscript((prev) =>
-            prev.endsWith("\n") ? prev : prev.trim() + "\n\n"
-          );
+        // When there's a pause, combine accumulated final results with the latest interim text.
+        const combined = (currentParagraphRef.current + currentInterimRef.current).trim();
+        if (combined) {
+          setParagraphs((prev) => [...prev, combined]);
+          // Clear the working paragraph and interim.
+          setCurrentParagraph("");
+          setCurrentInterim("");
         }
       }, 3000);
     };
@@ -58,6 +71,16 @@ export const NoteTaker = () => {
       if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
     };
   }, []);
+
+  // Auto-scroll to the bottom whenever paragraphs or the working transcript changes
+  useEffect(() => {
+    if (transcriptDisplayRef.current) {
+      transcriptDisplayRef.current.scrollTo({
+        top: transcriptDisplayRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [paragraphs, currentParagraph, currentInterim]);
 
   const startRecording = async () => {
     if (!socketRef.current) return;
@@ -113,7 +136,7 @@ export const NoteTaker = () => {
     }
   };
 
-  // Convert Float32Array audio data to Int16Array
+  // Convert Float32Array audio data to Int16Array.
   const float32ToInt16 = (float32Array) => {
     const int16Array = new Int16Array(float32Array.length);
     for (let i = 0; i < float32Array.length; i++) {
@@ -131,8 +154,14 @@ export const NoteTaker = () => {
           {isMicOn ? <MicIcon /> : <MicOffIcon />}
         </div>
       </div>
-      <div className="transcript-box">
-        <pre>{fullTranscript + currentPartial}</pre>
+      <div className="transcript-display" ref={transcriptDisplayRef}>
+        {paragraphs.map((para, idx) => (
+          <TranscriptParagraph key={idx} text={para} inProgress={false} />
+        ))}
+        {/* Display the working paragraph (final + interim) in its own box until it's flushed */}
+        {(currentParagraph || currentInterim) && (
+          <TranscriptParagraph text={(currentParagraph + currentInterim).trim()} inProgress={true} />
+        )}
       </div>
     </div>
   );
