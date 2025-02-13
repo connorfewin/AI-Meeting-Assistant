@@ -123,12 +123,6 @@ export const NoteTaker = () => {
       {/* Transcript box below */}
       <div className="transcript-box">
         <pre>{fullTranscript + currentPartial}</pre>
-        {/* <pre>
-          {fullTranscript}
-          <span style={{ opacity: 0.5 }}>
-            {currentPartial}
-          </span>
-        </pre> */}
       </div>
     </div>
   );

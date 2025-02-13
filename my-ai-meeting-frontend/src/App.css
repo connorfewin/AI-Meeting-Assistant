@@ -18,14 +18,15 @@
   background-color: var(--color-bg2);
 }
 
-/* Header container ~10% height */
 .header-container {
   flex: 0 0 10%;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   box-sizing: border-box;
   padding: 10px 10px 0px;
 }
+
 
 /* Panels container ~90% height */
 .panel-container {
@@ -50,7 +51,7 @@
 
 /* Gap (margin) only on the second panel */
 .panel.brain {
-  margin-left: 15px;
+  margin-left: 10px;
 }
 
 h1 {

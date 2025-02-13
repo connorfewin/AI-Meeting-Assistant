@@ -1,29 +1,35 @@
 /* header.css */
-
 .app-header {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 20px;
-    width: 100%;
-    /* border-bottom: 2px solid var(--color-text); example */
-    box-sizing: border-box;
-    border-radius: 10px;
-    /* Another background color, if desired */
-    background-color: var(--color-bg1);
-  }
+  display: flex;
+  flex-direction: row;       /* row layout: text on left, toggle on right */
+  justify-content: space-between;
+  align-items: center;
   
-  .app-title {
-    margin: 0;
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--color-text);
-  }
-  
-  .app-subtitle {
-    margin: 5px 0 0;
-    font-size: 1.1rem;
-    color: var(--color-bg3); /* use the primary color for a subtle highlight */
-    font-weight: 400;
-  }
-  
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 10px;
+  background-color: var(--color-bg1);
+}
+
+/* This div wraps the text to stack it vertically */
+.header-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* left align text */
+}
+
+/* Title & subtitle remain stacked */
+.app-title {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.app-subtitle {
+  margin: 5px 0 0;
+  font-size: 1.1rem;
+  color: var(--color-bg3); /* a subtle highlight color */
+  font-weight: 400;
+}
