@@ -13,7 +13,6 @@
 - [x] Capture external audio (microphone/system audio).
 - [x] Process audio through **Google Cloud Speech-to-Text**.
 - [x] Display real-time transcription in the UI.
-- [ ] Capture audio from meetings / videos
 
 ---
 
@@ -34,7 +33,8 @@
 
 ---
 
-## **5. Speaker Identification**
+## **5. Speaker Identification** 
+- [ ] Capture audio from meetings / videos (Screen share capture)
 - [ ] Tag transcriptions with speaker labels.
 - [ ] Ensure correct speaker attribution for both summarization and AI queries.
 
