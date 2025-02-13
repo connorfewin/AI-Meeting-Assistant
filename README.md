@@ -20,6 +20,8 @@
 - [x] Use NLP models to continuously restore punctuation to the text.
 - [x] Create line breaks on pauses
 - [ ] Use GPT to summarize paragraphs
+  - Something cool would be if each paragrpah rendered in its own component (just in a box). It will automatically summarize big ones I guess, but if you click a box it will automatically summarize that content, but if you click in between two boxes it will join their ideas together.
+  - I guess you would also need a way to seperate ideas too. Just something to consider.
 - [ ] Dynamically update UI with key points.
 - [ ] Optimize for low latency and useful insights.
 
