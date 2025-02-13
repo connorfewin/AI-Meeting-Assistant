@@ -1,7 +1,6 @@
 /* Container that holds everything */
 .note-taker-container {
-  margin: 1rem auto; /* Center horizontally on the page */
-  padding: 1rem;
+  padding: 10px;
   display: flex;
   flex-direction: column;
   border-radius: 8px;
@@ -20,28 +19,21 @@
 .note-taker-title {
   margin: 0;
   font-size: 1.5rem;
-  font-family: "Arial", sans-serif; /* Pick any font you like */
+  font-weight: 600;
 }
 
 /* Mic icon on the right */
 .mic-icon {
   cursor: pointer;
   font-size: 1.8rem;
-  /* Optional color: 
-     color: #d00;
-     or #333, etc.
-  */
 }
 
 /* Transcript area */
 .transcript-box {
   margin-top: 1rem;
   width: 100%;
-  overflow-x: hidden; /* no horizontal scroll */
-  /* If you want vertical scrolling at some limit:
-     max-height: 300px;
-     overflow-y: auto;
-  */
+  overflow-x: hidden;
+  overflow-y: auto;
   border-radius: 4px;
 }
 
