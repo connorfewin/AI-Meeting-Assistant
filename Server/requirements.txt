@@ -2,3 +2,4 @@ fastapi==0.95.2
 uvicorn==0.22.0
 transformers==4.27.1
 torch==2.0.1
+deepmultilingualpunctuation==1.0.1
