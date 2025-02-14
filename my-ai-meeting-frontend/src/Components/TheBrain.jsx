@@ -156,7 +156,7 @@ export const TheBrain = () => {
           <Button
             variant="outlined"
             onClick={handleClear}
-            className="brain-cancel-button"
+            className="brain-button"
             sx={{ marginRight: "10px"}}
           >
             <NotInterestedIcon />

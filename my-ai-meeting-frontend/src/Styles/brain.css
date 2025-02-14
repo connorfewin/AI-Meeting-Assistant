@@ -33,6 +33,12 @@
   color: #ffffff !important; /* text color */
 }
 
+/* Custom styles for the primary variant */
+.brain-button.MuiButton-outlinedPrimary {
+  color: var(--color-primary) !important; /* your primary color */
+  border: #ffffff;
+}
+
 /* Custom styles for the secondary variant */
 .brain-button.MuiButton-containedSecondary {
   background-color: var(--color-bg2) !important; /* your secondary color */
