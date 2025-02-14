@@ -29,12 +29,12 @@
 ---
 
 ## **4. AI Query Feature (On-Demand Responses)**
-- [ ] Implement a **secondary UI section** with a button to trigger AI queries.
-- [ ] Once the button is pressed:
-  - [ ] Capture the next spoken phrase.
-  - [ ] Send it as a structured GPT request.
-  - [ ] Display GPT’s response in a separate answer window.
-- [ ] Allow stopping/resetting queries easily.
+- [x] Implement a **secondary UI section** with a button to trigger AI queries.
+- [x] Once the button is pressed:
+  - [x] Capture the next spoken phrase.
+  - [x] Send it as a structured GPT request.
+  - [x] Display GPT’s response in a separate answer window.
+- [x] Allow stopping/resetting queries easily.
 
 ---
 
