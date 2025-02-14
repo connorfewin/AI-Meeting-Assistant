@@ -128,11 +128,10 @@ io.on('connection', (socket) => {
           const isFinal = data.results[0].isFinal;
 
           if (isFinal) {
+            console.log("Punctuate");
             try {
               // Create a prompt for punctuation restoration
-              const punctuationPrompt = `Please add appropriate punctuation and capitalization to the following transcript:
-        
-"${transcript.trim()}"`;
+              const punctuationPrompt = `Please add appropriate punctuation and capitalization to the following transcript: "${transcript.trim()}"`;
 
               const response = await openai.chat.completions.create({
                 model: "gpt-3.5-turbo", // or use a model that's fastest/cheapest for your use case
@@ -182,7 +181,7 @@ io.on('connection', (socket) => {
 //------------------------------------------------------
 // 5. Start the Server
 //------------------------------------------------------
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.REACT_APP_SOCKET_URL || 5000;
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
