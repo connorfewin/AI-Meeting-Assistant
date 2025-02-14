@@ -121,6 +121,7 @@ io.on('connection', (socket) => {
         console.error('Error in Google Cloud recognize stream:', err);
         socket.emit('googleCloudStreamError', err.message);
       })
+      // Inside your socket.on('data') event handler:
       .on('data', async (data) => {
         if (data.results[0] && data.results[0].alternatives[0]) {
           const transcript = data.results[0].alternatives[0].transcript;
@@ -128,13 +129,23 @@ io.on('connection', (socket) => {
 
           if (isFinal) {
             try {
-              const response = await axios.post('http://localhost:8001/punctuate', {
-                text: transcript.trim(),
+              // Create a prompt for punctuation restoration
+              const punctuationPrompt = `Please add appropriate punctuation and capitalization to the following transcript:
+        
+"${transcript.trim()}"`;
+
+              const response = await openai.chat.completions.create({
+                model: "gpt-3.5-turbo", // or use a model that's fastest/cheapest for your use case
+                messages: [
+                  { role: "system", content: "You are an editor that restores gramatical punctuation and proper capitalization to text. Dont use quotations marks." },
+                  { role: "user", content: punctuationPrompt }
+                ],
               });
-              const punctuatedText = response.data.punctuated_text;
+              const punctuatedText = response.choices[0].message.content.trim();
               socket.emit('speechData', { transcript: punctuatedText, isFinal });
             } catch (error) {
-              console.error('Punctuation restoration error:', error);
+              console.error('Punctuation restoration error with GPT:', error);
+              // Fallback to unpunctuated transcript if error occurs
               socket.emit('speechData', { transcript, isFinal });
             }
           } else {
@@ -142,6 +153,7 @@ io.on('connection', (socket) => {
           }
         }
       });
+
   });
 
   // Forward raw audio data to the recognition stream
