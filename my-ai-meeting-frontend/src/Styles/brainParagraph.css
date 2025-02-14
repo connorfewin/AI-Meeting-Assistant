@@ -1,0 +1,31 @@
+.answer-window {
+    /* background-color: var(--color-bg3); */
+  }
+  
+  /* Skeleton styles */
+  .skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .skeleton-line {
+    height: 1em;
+    width: 100%;
+    background-color: #777;
+    border-radius: 4px;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  
+  @keyframes pulse {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.4;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  

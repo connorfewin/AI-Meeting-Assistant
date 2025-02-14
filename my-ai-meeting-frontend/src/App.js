@@ -1,9 +1,9 @@
 // src/App.js
 import React from "react";
 import "./App.css";
-import { Brain } from "./Components/Brain";
 import { Header } from "./Components/Header";
 import { NoteTaker } from "./Components/NoteTaker";
+import { TheBrain } from "./Components/TheBrain";
 
 function App() {
   return (
@@ -12,11 +12,11 @@ function App() {
         <Header />
       </div>
       <div className="panel-container">
+        <div className="panel brain">
+          <TheBrain />
+        </div>
         <div className="panel note-taker">
           <NoteTaker />
-        </div>
-        <div className="panel brain">
-          <Brain />
         </div>
       </div>
     </div>

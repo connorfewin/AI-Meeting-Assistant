@@ -22,7 +22,7 @@ app.use(express.json());
 //------------------------------------------------------
 // 2. OpenAI API Client & Summarization Endpoint
 //------------------------------------------------------
-const openai = new OpenAI({apiKey: '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'});
+const openai = new OpenAI({ apiKey: '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' });
 
 app.post('/api/summarize', async (req, res) => {
   const { text } = req.body;
@@ -35,10 +35,10 @@ app.post('/api/summarize', async (req, res) => {
       messages: [
         { role: "assistant", content: "You are an efficient note-taker. Capture key points, decisions, and action items accurately. Simplify and organize discussions for quick catch-up. Use clear structure but avoid fluff—headers when useful, bullets for clarity, and concise phrasing. No filler words, just essential takeaways." },
         {
-            role: "user",
-            content: prompt,
+          role: "user",
+          content: prompt,
         },
-    ],
+      ],
     });
     const summary = response.choices[0].message;
     res.json({ summary });
@@ -47,6 +47,44 @@ app.post('/api/summarize', async (req, res) => {
     res.status(500).json({ error: "Failed to summarize text" });
   }
 });
+
+app.post('/api/developer', async (req, res) => {
+  const { text } = req.body;
+  if (!text) return res.status(400).json({ error: "No text provided" });
+  console.log("Developer question received");
+
+  try {
+    const prompt = `Problem: ${text}\n
+Provide only the minimal information needed to answer this problem. 
+- If it's a coding problem, include concise Java pseudocode.
+- If not, answer briefly in bullet points.
+Avoid extra details.`;
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a technical interview coach. Your responses must be extremely concise—only the essentials. " +
+            "Include minimal bullet points and Java pseudocode when it helps. " +
+            "If providing pseudo code, leave comments in the code about what everything is doing and why you are doing it. Omit unnecessary details.",
+        },
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+    });
+
+    const answer = response.choices[0].message;
+    res.json({ answer });
+  } catch (error) {
+    console.error("Error calling OpenAI API:", error);
+    res.status(500).json({ error: "Failed to process the developer question" });
+  }
+});
+
 
 //------------------------------------------------------
 // 3. Google Cloud Speech Client
@@ -87,7 +125,7 @@ io.on('connection', (socket) => {
         if (data.results[0] && data.results[0].alternatives[0]) {
           const transcript = data.results[0].alternatives[0].transcript;
           const isFinal = data.results[0].isFinal;
-          
+
           if (isFinal) {
             try {
               const response = await axios.post('http://localhost:8001/punctuate', {

@@ -6,7 +6,7 @@ export const TranscriptParagraph = ({ text, inProgress }) => {
 
     useEffect(() => {
         // When the text is finalized and long enough (e.g. more than 2 periods)
-        if (!inProgress && (text.match(/\./g) || []).length > 2) {
+        if (!inProgress) {
             // Call the summarization API
             fetch("http://localhost:5000/api/summarize", {
                 method: "POST",
