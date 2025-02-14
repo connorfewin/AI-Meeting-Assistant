@@ -9,4 +9,3 @@ python -m venv venv
 pip install fastapi uvicorn transformers torch
 
 uvicorn punctuator:app --host 0.0.0.0 --port 8001
-uvicorn summarizer:app --host 0.0.0.0 --port 8002

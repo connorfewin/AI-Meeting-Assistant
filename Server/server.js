@@ -33,7 +33,7 @@ app.post('/api/summarize', async (req, res) => {
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
-        { role: "assistant", content: "You are a helpful note taker that simplifies and organizes the following text into a concise summary. Provide solid note taking strucutre so your notes are readable." },
+        { role: "assistant", content: "You are an efficient note-taker. Capture key points, decisions, and action items accurately. Simplify and organize discussions for quick catch-up. Use clear structure but avoid fluff—headers when useful, bullets for clarity, and concise phrasing. No filler words, just essential takeaways." },
         {
             role: "user",
             content: prompt,

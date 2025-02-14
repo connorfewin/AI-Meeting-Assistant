@@ -24,7 +24,7 @@
   - I guess you would also need a way to seperate ideas too. Just something to consider.
   - Maybe this is a pure manual mode, but at that point you are basically listening to the conversation, which defys the purpose.
 - [x] Dynamically update UI with key points.
-- [ ] Optimize for low latency and useful insights.
+- [x] Optimize for low latency and useful insights.
 
 ---
 
