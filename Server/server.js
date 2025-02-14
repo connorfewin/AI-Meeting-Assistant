@@ -90,7 +90,7 @@ Avoid extra details.`;
 // 3. Google Cloud Speech Client
 //------------------------------------------------------
 const speechClient = new SpeechClient({
-  keyFilename: 'C:/Users/cjfew/Desktop/Code/AI-Meeting-Assistant/Server/sensitive/ultimate-flame-291020-dfe641a1746c.json',
+  credentials: JSON.parse(process.env.GOOGLE_CLOUD_CREDENTIALS)
 });
 
 //------------------------------------------------------
