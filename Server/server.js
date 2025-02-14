@@ -181,7 +181,7 @@ io.on('connection', (socket) => {
 //------------------------------------------------------
 // 5. Start the Server
 //------------------------------------------------------
-const PORT = process.env.REACT_APP_SOCKET_URL || 5000;
+const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
