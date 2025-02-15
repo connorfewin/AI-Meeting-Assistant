@@ -29,3 +29,5 @@ venv/
 
 Server/.env
 Server/sensitive/
+
+my-ai-meeting-frontend/.env

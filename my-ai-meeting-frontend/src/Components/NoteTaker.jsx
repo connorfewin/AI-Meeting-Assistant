@@ -33,7 +33,7 @@ export const NoteTaker = () => {
   }, [currentInterim]);
 
   useEffect(() => {
-    socketRef.current = io("http://localhost:5000");
+    socketRef.current = io(process.env.REACT_APP_SOCKET_URL || 'http://localhost:5000');
 
     const handleSpeechData = ({ transcript, isFinal }) => {
       if (isFinal) {
