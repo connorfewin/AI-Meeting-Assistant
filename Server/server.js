@@ -85,7 +85,6 @@ Avoid extra details.`;
   }
 });
 
-
 //------------------------------------------------------
 // 3. Google Cloud Speech Client
 //------------------------------------------------------
@@ -107,32 +106,32 @@ io.on('connection', (socket) => {
 
   // Start the Google Cloud Speech stream when requested
   socket.on('startGoogleCloudStream', () => {
-    console.log('Starting Google Cloud Stream for', socket.id);
+    const config = {
+      encoding: 'LINEAR16',
+      sampleRateHertz: 48000,
+      languageCode: 'en-US',
+    };
+    console.log(`Starting Google Cloud Stream for ${socket.id} with config:`, config);
     recognizeStream = speechClient
       .streamingRecognize({
-        config: {
-          encoding: 'LINEAR16',
-          sampleRateHertz: 48000,
-          languageCode: 'en-US',
-        },
+        config,
         interimResults: true,
       })
       .on('error', (err) => {
         console.error('Error in Google Cloud recognize stream:', err);
         socket.emit('googleCloudStreamError', err.message);
       })
-      // Inside your socket.on('data') event handler:
       .on('data', async (data) => {
-        if (data.results[0] && data.results[0].alternatives[0]) {
+        console.log('Received data event from Google Cloud Speech:', data);
+        if (data.results && data.results[0] && data.results[0].alternatives && data.results[0].alternatives[0]) {
           const transcript = data.results[0].alternatives[0].transcript;
           const isFinal = data.results[0].isFinal;
-
+          console.log(`Transcript received: "${transcript}" - isFinal: ${isFinal}`);
           if (isFinal) {
-            console.log("Punctuate");
+            console.log("Punctuation restoration triggered for transcript:", transcript);
             try {
-              // Create a prompt for punctuation restoration
               const punctuationPrompt = `Please add appropriate punctuation and capitalization to the following transcript: "${transcript.trim()}"`;
-
+              console.log('Punctuation prompt:', punctuationPrompt);
               const response = await openai.chat.completions.create({
                 model: "gpt-3.5-turbo", // or use a model that's fastest/cheapest for your use case
                 messages: [
@@ -141,6 +140,7 @@ io.on('connection', (socket) => {
                 ],
               });
               const punctuatedText = response.choices[0].message.content.trim();
+              console.log('Punctuation restoration successful:', punctuatedText);
               socket.emit('speechData', { transcript: punctuatedText, isFinal });
             } catch (error) {
               console.error('Punctuation restoration error with GPT:', error);
@@ -150,21 +150,33 @@ io.on('connection', (socket) => {
           } else {
             socket.emit('speechData', { transcript, isFinal });
           }
+        } else {
+          console.log('Received data with unexpected format:', data);
         }
       });
-
   });
 
   // Forward raw audio data to the recognition stream
   socket.on('sendAudioData', (audioChunk) => {
-    if (recognizeStream) recognizeStream.write(audioChunk);
+    if (recognizeStream) {
+      try {
+        recognizeStream.write(audioChunk);
+      } catch (err) {
+        console.error('Error writing audio chunk to recognizeStream:', err);
+      }
+    } else {
+      console.warn('Attempted to write audio data, but recognizeStream is null.');
+    }
   });
 
   // End the speech stream when requested
   socket.on('stopGoogleCloudStream', () => {
+    console.log(`Stopping Google Cloud Stream for ${socket.id}`);
     if (recognizeStream) {
       recognizeStream.end();
       recognizeStream = null;
+    } else {
+      console.warn('stopGoogleCloudStream called but recognizeStream was already null.');
     }
   });
 
@@ -172,6 +184,7 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('Client disconnected:', socket.id);
     if (recognizeStream) {
+      console.log(`Cleaning up recognizeStream for ${socket.id} on disconnect`);
       recognizeStream.end();
       recognizeStream = null;
     }
