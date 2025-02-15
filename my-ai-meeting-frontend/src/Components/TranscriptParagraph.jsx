@@ -8,13 +8,14 @@ export const TranscriptParagraph = ({ text, inProgress }) => {
         // When the text is finalized and long enough (e.g. more than 2 periods)
         if (!inProgress) {
             // Call the summarization API
-            fetch("http://localhost:5000/api/summarize", {
+            fetch(`${process.env.REACT_APP_API_URL}/api/developer`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
+                  "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ text }),
-            })
+              })
+              
                 .then((response) => response.json())
                 .then((data) => {
                     console.log(data);
