@@ -10,7 +10,7 @@ export const BrainParagraph = ({ text, inProgress }) => {
     if (!inProgress) {
       setIsLoading(true);
       // Call the developer API
-      fetch(`${process.env.REACT_APP_API_URL}/api/developer`, {
+      fetch(`${process.env.REACT_APP_SOCKET_URL}/api/developer`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
