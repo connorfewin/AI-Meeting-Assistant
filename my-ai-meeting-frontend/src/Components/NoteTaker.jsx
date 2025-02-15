@@ -87,22 +87,27 @@ export const NoteTaker = () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const context = new (window.AudioContext || window.webkitAudioContext)();
+      
+      if (context.sampleRate !== 48000) {
+        console.warn("Warning: AudioContext sample rate is not 48000 Hz. You might need to resample.");
+      }
+  
       const source = context.createMediaStreamSource(stream);
       const scriptProcessor = context.createScriptProcessor(4096, 1, 1);
-
+  
       scriptProcessor.onaudioprocess = (e) => {
         const inputData = e.inputBuffer.getChannelData(0);
         const pcm16Data = float32ToInt16(inputData);
         socketRef.current.emit("sendAudioData", pcm16Data);
       };
-
+  
       source.connect(scriptProcessor);
       scriptProcessor.connect(context.destination);
-
+  
       mediaStreamRef.current = stream;
       audioContextRef.current = context;
       processorRef.current = scriptProcessor;
-
+  
       socketRef.current.emit("startGoogleCloudStream");
     } catch (err) {
       console.error("Error accessing microphone:", err);

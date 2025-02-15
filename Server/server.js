@@ -1,8 +1,3 @@
-// server.js
-
-//------------------------------------------------------
-// 1. Imports & Initial Setup
-//------------------------------------------------------
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
@@ -11,17 +6,12 @@ const cors = require('cors');
 const axios = require('axios');
 require('dotenv').config();
 
-// Use destructuring to import from OpenAI
 const { OpenAI } = require("openai");
 
-// Create Express app and configure middleware
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-//------------------------------------------------------
-// 2. OpenAI API Client & Summarization Endpoint
-//------------------------------------------------------
 const openai = new OpenAI({ apiKey: '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' });
 
 app.post('/api/summarize', async (req, res) => {
@@ -34,10 +24,7 @@ app.post('/api/summarize', async (req, res) => {
       model: "gpt-4o-mini",
       messages: [
         { role: "assistant", content: "You are an efficient note-taker. Capture key points, decisions, and action items accurately. Simplify and organize discussions for quick catch-up. Use clear structure but avoid fluff—headers when useful, bullets for clarity, and concise phrasing. No filler words, just essential takeaways." },
-        {
-          role: "user",
-          content: prompt,
-        },
+        { role: "user", content: prompt }
       ],
     });
     const summary = response.choices[0].message;
@@ -52,14 +39,12 @@ app.post('/api/developer', async (req, res) => {
   const { text } = req.body;
   if (!text) return res.status(400).json({ error: "No text provided" });
   console.log("Developer question received");
-
   try {
     const prompt = `Problem: ${text}\n
 Provide only the minimal information needed to answer this problem. 
 - If it's a coding problem, include concise Java pseudocode.
 - If not, answer briefly in bullet points.
 Avoid extra details.`;
-
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
@@ -70,13 +55,9 @@ Avoid extra details.`;
             "Include minimal bullet points and Java pseudocode when it helps. " +
             "If providing pseudo code, leave comments in the code about what everything is doing and why you are doing it. Omit unnecessary details.",
         },
-        {
-          role: "user",
-          content: prompt,
-        },
+        { role: "user", content: prompt }
       ],
     });
-
     const answer = response.choices[0].message;
     res.json({ answer });
   } catch (error) {
@@ -85,40 +66,36 @@ Avoid extra details.`;
   }
 });
 
-//------------------------------------------------------
-// 3. Google Cloud Speech Client
-//------------------------------------------------------
 const speechClient = new SpeechClient({
   credentials: JSON.parse(process.env.GOOGLE_CLOUD_CREDENTIALS)
 });
 
-//------------------------------------------------------
-// 4. Socket.io Connection & Speech Streams
-//------------------------------------------------------
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: '*' } // Restrict this in production
+  cors: { origin: '*' }
 });
 
 io.on('connection', (socket) => {
   console.log('Client connected:', socket.id);
   let recognizeStream = null;
 
-  // Start the Google Cloud Speech stream when requested
   socket.on('startGoogleCloudStream', () => {
     const config = {
       encoding: 'LINEAR16',
       sampleRateHertz: 48000,
       languageCode: 'en-US',
     };
-    console.log(`Starting Google Cloud Stream for ${socket.id} with config:`, config);
+
+    console.log(`Starting Google Cloud Stream for ${socket.id}`);
+    console.log("Google Cloud Speech configuration:", JSON.stringify(config, null, 2));
+
     recognizeStream = speechClient
       .streamingRecognize({
         config,
         interimResults: true,
       })
       .on('error', (err) => {
-        console.error('Error in Google Cloud recognize stream:', err);
+        console.error(`Error in Google Cloud recognize stream for ${socket.id} with config ${JSON.stringify(config, null, 2)}:`, err);
         socket.emit('googleCloudStreamError', err.message);
       })
       .on('data', async (data) => {
@@ -133,7 +110,7 @@ io.on('connection', (socket) => {
               const punctuationPrompt = `Please add appropriate punctuation and capitalization to the following transcript: "${transcript.trim()}"`;
               console.log('Punctuation prompt:', punctuationPrompt);
               const response = await openai.chat.completions.create({
-                model: "gpt-3.5-turbo", // or use a model that's fastest/cheapest for your use case
+                model: "gpt-3.5-turbo",
                 messages: [
                   { role: "system", content: "You are an editor that restores gramatical punctuation and proper capitalization to text. Dont use quotations marks." },
                   { role: "user", content: punctuationPrompt }
@@ -144,7 +121,6 @@ io.on('connection', (socket) => {
               socket.emit('speechData', { transcript: punctuatedText, isFinal });
             } catch (error) {
               console.error('Punctuation restoration error with GPT:', error);
-              // Fallback to unpunctuated transcript if error occurs
               socket.emit('speechData', { transcript, isFinal });
             }
           } else {
@@ -156,7 +132,6 @@ io.on('connection', (socket) => {
       });
   });
 
-  // Forward raw audio data to the recognition stream
   socket.on('sendAudioData', (audioChunk) => {
     if (recognizeStream) {
       try {
@@ -169,7 +144,6 @@ io.on('connection', (socket) => {
     }
   });
 
-  // End the speech stream when requested
   socket.on('stopGoogleCloudStream', () => {
     console.log(`Stopping Google Cloud Stream for ${socket.id}`);
     if (recognizeStream) {
@@ -180,7 +154,6 @@ io.on('connection', (socket) => {
     }
   });
 
-  // Clean up when the client disconnects
   socket.on('disconnect', () => {
     console.log('Client disconnected:', socket.id);
     if (recognizeStream) {
@@ -191,9 +164,6 @@ io.on('connection', (socket) => {
   });
 });
 
-//------------------------------------------------------
-// 5. Start the Server
-//------------------------------------------------------
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
