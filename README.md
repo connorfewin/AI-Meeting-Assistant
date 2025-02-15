@@ -47,6 +47,7 @@
 
 ## **6. Final Optimizations & Enhancements**
 - [ ] Improve processing speed and UI responsiveness.
+- [ ] Production version
 - [ ] Have brain build off other paragraphs for context
 - [ ] Refine GPT prompts for better summarization & query handling.
 - [ ] Add export options (PDF, email, API integration).
