@@ -50,9 +50,9 @@
 }
 
 /* Gap (margin) only on the second panel */
-.panel.note-taker {
+/* .panel.note-taker {
   margin-left: 10px;
-}
+} */
 
 h1 {
   color: var(--color-text);

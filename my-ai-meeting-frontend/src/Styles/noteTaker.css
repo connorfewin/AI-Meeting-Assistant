@@ -23,10 +23,38 @@
   font-weight: 600;
 }
 
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* adjust spacing as needed */
+}
+
+
 /* Mic icon styling */
 .mic-icon {
   cursor: pointer;
   font-size: 1.8rem;
+}
+
+.meeting-icon {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.meeting-icon svg {
+  font-size: 2.5rem; /* Adjust size as needed */
+}
+
+.meeting-icon.active svg {
+  fill: var(--color-primary);
+}
+
+.meeting-icon.disabled svg {
+  fill: var(--color-bg3);
+}
+
+.meeting-icon:hover {
+  opacity: 0.8;
 }
 
 /* Transcript display area: scrollable content area only */

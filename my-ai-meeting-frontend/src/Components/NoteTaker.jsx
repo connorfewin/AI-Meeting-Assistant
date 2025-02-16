@@ -1,28 +1,26 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import MicIcon from "@mui/icons-material/Mic";
 import MicOffIcon from "@mui/icons-material/MicOff";
-import io from "socket.io-client";
+import GroupsIcon from "@mui/icons-material/Groups"; // Meeting icon
 import "../Styles/noteTaker.css";
 import { TranscriptParagraph } from "./TranscriptParagraph";
+import { useSpeechRecognition } from "../hooks/useSpeechRecognition";
 
 export const NoteTaker = () => {
-  const [isMicOn, setIsMicOn] = useState(false);
-  const [paragraphs, setParagraphs] = useState([]); // Finished paragraphs.
-  const [currentParagraph, setCurrentParagraph] = useState(""); // Accumulated final transcript.
-  const [currentInterim, setCurrentInterim] = useState(""); // Latest interim transcript.
+  // Local state for transcription display.
+  const [paragraphs, setParagraphs] = useState([]);
+  const [currentParagraph, setCurrentParagraph] = useState("");
+  const [currentInterim, setCurrentInterim] = useState("");
 
-  const socketRef = useRef(null);
-  const mediaStreamRef = useRef(null);
-  const audioContextRef = useRef(null);
-  const processorRef = useRef(null);
-  const pauseTimerRef = useRef(null);
-  
-  // Ref for the transcript display container
+  // Separate booleans for mic and meeting.
+  const [micOn, setMicOn] = useState(false);
+  const [meetingOn, setMeetingOn] = useState(false);
+
+  // For auto-scroll.
   const transcriptDisplayRef = useRef(null);
-
-  // Refs to keep our state values updated in the timer callback.
   const currentParagraphRef = useRef("");
   const currentInterimRef = useRef("");
+  const pauseTimerRef = useRef(null);
 
   useEffect(() => {
     currentParagraphRef.current = currentParagraph;
@@ -32,47 +30,30 @@ export const NoteTaker = () => {
     currentInterimRef.current = currentInterim;
   }, [currentInterim]);
 
-  useEffect(() => {
-    socketRef.current = io(process.env.REACT_APP_SOCKET_URL || 'http://localhost:5000');
+  // Handle incoming speech data.
+  const handleSpeechData = useCallback(({ transcript, isFinal }) => {
+    if (isFinal) {
+      setCurrentParagraph((prev) => prev + transcript.trim() + " ");
+      setCurrentInterim("");
+    } else {
+      setCurrentInterim(transcript);
+    }
 
-    const handleSpeechData = ({ transcript, isFinal }) => {
-      if (isFinal) {
-        // Append final transcript to the working paragraph.
-        setCurrentParagraph((prev) => prev + transcript.trim() + " ");
-        // Clear any interim text.
+    if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
+    pauseTimerRef.current = setTimeout(() => {
+      const combinedText = (currentParagraphRef.current + currentInterimRef.current).trim();
+      if (combinedText) {
+        setParagraphs((prev) => [...prev, combinedText]);
+        setCurrentParagraph("");
         setCurrentInterim("");
-      } else {
-        // For interim results, update the interim text only.
-        setCurrentInterim(transcript);
       }
-
-      // Reset the pause timer on every speech event.
-      if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
-      pauseTimerRef.current = setTimeout(() => {
-        // When there's a pause, combine accumulated final results with the latest interim text.
-        const combined = (currentParagraphRef.current + currentInterimRef.current).trim();
-        if (combined) {
-          setParagraphs((prev) => [...prev, combined]);
-          // Clear the working paragraph and interim.
-          setCurrentParagraph("");
-          setCurrentInterim("");
-        }
-      }, 3000);
-    };
-
-    socketRef.current.on("speechData", handleSpeechData);
-
-    socketRef.current.on("googleCloudStreamError", (errMsg) => {
-      console.error("Speech Stream Error:", errMsg);
-    });
-
-    return () => {
-      socketRef.current.disconnect();
-      if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
-    };
+    }, 3000);
   }, []);
 
-  // Auto-scroll to the bottom whenever paragraphs or the working transcript changes
+  // Pass micOn and meetingOn flags into the hook.
+  const { stopRecording } = useSpeechRecognition(handleSpeechData, micOn, meetingOn, setMeetingOn);
+
+  // Auto-scroll.
   useEffect(() => {
     if (transcriptDisplayRef.current) {
       transcriptDisplayRef.current.scrollTo({
@@ -82,90 +63,50 @@ export const NoteTaker = () => {
     }
   }, [paragraphs, currentParagraph, currentInterim]);
 
-  const startRecording = async () => {
-    if (!socketRef.current) return;
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const context = new (window.AudioContext || window.webkitAudioContext)();
-      
-      if (context.sampleRate !== 48000) {
-        console.warn("Warning: AudioContext sample rate is not 48000 Hz. You might need to resample.");
-      }
-  
-      const source = context.createMediaStreamSource(stream);
-      const scriptProcessor = context.createScriptProcessor(4096, 1, 1);
-  
-      scriptProcessor.onaudioprocess = (e) => {
-        const inputData = e.inputBuffer.getChannelData(0);
-        const pcm16Data = float32ToInt16(inputData);
-        socketRef.current.emit("sendAudioData", pcm16Data);
-      };
-  
-      source.connect(scriptProcessor);
-      scriptProcessor.connect(context.destination);
-  
-      mediaStreamRef.current = stream;
-      audioContextRef.current = context;
-      processorRef.current = scriptProcessor;
-  
-      socketRef.current.emit("startGoogleCloudStream");
-    } catch (err) {
-      console.error("Error accessing microphone:", err);
-    }
+  // Toggle the mic.
+  const toggleMic = () => {
+    setMicOn((prev) => !prev);
   };
 
-  const stopRecording = () => {
-    if (!socketRef.current) return;
-
-    socketRef.current.emit("stopGoogleCloudStream");
-
-    if (processorRef.current) processorRef.current.disconnect();
-    if (audioContextRef.current && audioContextRef.current.state !== "closed")
-      audioContextRef.current.close();
-    if (mediaStreamRef.current) {
-      mediaStreamRef.current.getTracks().forEach((track) => track.stop());
-    }
-
-    processorRef.current = null;
-    audioContextRef.current = null;
-    mediaStreamRef.current = null;
+  // Toggle meeting (screen share). If turning meeting off, also set mic off if desired.
+  const toggleMeeting = () => {
+    setMeetingOn((prev) => !prev);
   };
 
-  const handleMicToggle = () => {
-    if (!isMicOn) {
-      setIsMicOn(true);
-      startRecording();
-    } else {
-      setIsMicOn(false);
+  // When both mic and meeting are off, stop recording.
+  useEffect(() => {
+    if (!micOn && !meetingOn) {
       stopRecording();
     }
-  };
-
-  // Convert Float32Array audio data to Int16Array.
-  const float32ToInt16 = (float32Array) => {
-    const int16Array = new Int16Array(float32Array.length);
-    for (let i = 0; i < float32Array.length; i++) {
-      const s = Math.max(-1, Math.min(1, float32Array[i]));
-      int16Array[i] = s < 0 ? s * 0x8000 : s * 0x7fff;
-    }
-    return int16Array;
-  };
+  }, [micOn, meetingOn, stopRecording]);
 
   return (
     <div className="note-taker-container">
       <div className="note-taker-header">
         <h1 className="note-taker-title">Note Taker</h1>
-        <div className="mic-icon" onClick={handleMicToggle}>
-          {isMicOn ? <MicIcon /> : <MicOffIcon />}
+        <div className="controls">
+          <div
+            className={`meeting-icon ${meetingOn ? "active" : "disabled"}`}
+            onClick={toggleMeeting}
+          >
+            <GroupsIcon />
+          </div>
+
+          <div className="mic-icon" onClick={toggleMic}>
+            {/* Show mic on/off icon based on micOn */}
+            {micOn ? <MicIcon /> : <MicOffIcon />}
+          </div>
         </div>
       </div>
       <div className="transcript-display" ref={transcriptDisplayRef}>
         {paragraphs.map((para, idx) => (
           <TranscriptParagraph key={idx} text={para} inProgress={false} />
         ))}
-        {/* Display the working paragraph (final + interim) in its own box until it's flushed */}
         {(currentParagraph || currentInterim) && (
-          <TranscriptParagraph text={(currentParagraph + currentInterim).trim()} inProgress={true} />
+          <TranscriptParagraph
+            text={(currentParagraph + currentInterim).trim()}
+            inProgress={true}
+          />
         )}
       </div>
     </div>

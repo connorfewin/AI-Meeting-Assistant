@@ -12,9 +12,9 @@ function App() {
         <Header />
       </div>
       <div className="panel-container">
-        <div className="panel brain">
+        {/* <div className="panel brain">
           <TheBrain />
-        </div>
+        </div> */}
         <div className="panel note-taker">
           <NoteTaker />
         </div>

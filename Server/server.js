@@ -76,7 +76,6 @@ const io = new Server(server, {
 });
 
 io.on('connection', (socket) => {
-  console.log('Client connected:', socket.id);
   let recognizeStream = null;
 
   socket.on('startGoogleCloudStream', () => {
@@ -85,9 +84,6 @@ io.on('connection', (socket) => {
       sampleRateHertz: 48000,
       languageCode: 'en-US',
     };
-
-    console.log(`Starting Google Cloud Stream for ${socket.id}`);
-    console.log("Google Cloud Speech configuration:", JSON.stringify(config, null, 2));
 
     recognizeStream = speechClient
       .streamingRecognize({
@@ -99,16 +95,12 @@ io.on('connection', (socket) => {
         socket.emit('googleCloudStreamError', err.message);
       })
       .on('data', async (data) => {
-        console.log('Received data event from Google Cloud Speech:', data);
         if (data.results && data.results[0] && data.results[0].alternatives && data.results[0].alternatives[0]) {
           const transcript = data.results[0].alternatives[0].transcript;
           const isFinal = data.results[0].isFinal;
-          console.log(`Transcript received: "${transcript}" - isFinal: ${isFinal}`);
           if (isFinal) {
-            console.log("Punctuation restoration triggered for transcript:", transcript);
             try {
               const punctuationPrompt = `Please add appropriate punctuation and capitalization to the following transcript: "${transcript.trim()}"`;
-              console.log('Punctuation prompt:', punctuationPrompt);
               const response = await openai.chat.completions.create({
                 model: "gpt-3.5-turbo",
                 messages: [
@@ -117,7 +109,6 @@ io.on('connection', (socket) => {
                 ],
               });
               const punctuatedText = response.choices[0].message.content.trim();
-              console.log('Punctuation restoration successful:', punctuatedText);
               socket.emit('speechData', { transcript: punctuatedText, isFinal });
             } catch (error) {
               console.error('Punctuation restoration error with GPT:', error);
@@ -145,7 +136,6 @@ io.on('connection', (socket) => {
   });
 
   socket.on('stopGoogleCloudStream', () => {
-    console.log(`Stopping Google Cloud Stream for ${socket.id}`);
     if (recognizeStream) {
       recognizeStream.end();
       recognizeStream = null;
@@ -155,9 +145,8 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    console.log('Client disconnected:', socket.id);
     if (recognizeStream) {
-      console.log(`Cleaning up recognizeStream for ${socket.id} on disconnect`);
+      console.log('Client disconnected:', socket.id);
       recognizeStream.end();
       recognizeStream = null;
     }

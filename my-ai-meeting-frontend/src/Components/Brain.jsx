@@ -96,14 +96,12 @@ export const Brain = () => {
         combinedBuffer.set(chunk, offset);
         offset += chunk.length;
       }
-      console.log("Recorded audio data (Int16):", combinedBuffer);
 
       // Simulate a GPT call (processing the audio) with a timeout
       gptRequestRef.current = setTimeout(() => {
         // Simulate punctuation on the transcript (for demonstration purposes)
         const simulatedTranscript =
           "This is your simulated, punctuated transcript.";
-        console.log("Punctuated Transcript:", simulatedTranscript);
         setTranscript(simulatedTranscript);
         setBrainState(BRAIN_STATES.IDLE);
         gptRequestRef.current = null;
