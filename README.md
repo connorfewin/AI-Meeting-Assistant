@@ -38,14 +38,22 @@
 
 ---
 
-## **5. Speaker Identification** 
-- [ ] Capture audio from meetings / videos (Screen share capture)
+## **5. Note Taking**
+- [ ] Use previous paragraph to reduce redundancy in notes
+- [ ] Add ability to combine paragraphs
+- [ ] Optimize GPT prompts to get better notes.
+
+
+---
+
+## **6. Speaker Identification** 
+- [x] Capture audio from meetings / videos (Screen share capture)
 - [ ] Tag transcriptions with speaker labels.
 - [ ] Ensure correct speaker attribution for both summarization and AI queries.
 
 ---
 
-## **6. Final Optimizations & Enhancements**
+## **7. Final Optimizations & Enhancements**
 - [ ] Improve processing speed and UI responsiveness.
 - [x] Production version
 - [ ] Have brain build off other paragraphs for context
@@ -53,3 +61,9 @@
 - [ ] Add export options (PDF, email, API integration).
 - [ ] Conduct real-world tests in live meetings.
 - [ ] Store meeting notes locally to maintain a history of discussions.
+
+---
+
+## Bugs
+- [x] Meeting mode doubles the text
+- [x] Control pannel should stay at the top when there is y-overflow
