@@ -94,33 +94,47 @@ io.on('connection', (socket) => {
         console.error(`Error in Google Cloud recognize stream for ${socket.id} with config ${JSON.stringify(config, null, 2)}:`, err);
         socket.emit('googleCloudStreamError', err.message);
       })
-      .on('data', async (data) => {
-        if (data.results && data.results[0] && data.results[0].alternatives && data.results[0].alternatives[0]) {
-          const transcript = data.results[0].alternatives[0].transcript;
-          const isFinal = data.results[0].isFinal;
-          if (isFinal) {
-            try {
-              const punctuationPrompt = `Please add appropriate punctuation and capitalization to the following transcript: "${transcript.trim()}"`;
-              const response = await openai.chat.completions.create({
-                model: "gpt-3.5-turbo",
-                messages: [
-                  { role: "system", content: "You are an editor that restores gramatical punctuation and proper capitalization to text. Dont use quotations marks." },
-                  { role: "user", content: punctuationPrompt }
-                ],
-              });
-              const punctuatedText = response.choices[0].message.content.trim();
-              socket.emit('speechData', { transcript: punctuatedText, isFinal });
-            } catch (error) {
-              console.error('Punctuation restoration error with GPT:', error);
-              socket.emit('speechData', { transcript, isFinal });
-            }
-          } else {
-            socket.emit('speechData', { transcript, isFinal });
+      .on("data", async (data) => {
+        const alt = data.results?.[0]?.alternatives?.[0];
+        if (!alt) return;
+      
+        const transcript = alt.transcript;
+        const isFinal = data.results[0].isFinal;
+      
+        if (isFinal) {
+          try {
+            const punctuationPrompt = `
+            Correct grammar, punctuation, and capitalization in the following text.
+            Make sure each sentence ends with proper punctuation.
+            Start each sentence with a capital letter.
+            Insert new paragraphs where a new idea starts.
+            Do not include any quotation marks.
+            Raw text:
+            ${transcript.trim()}
+            `;
+      
+            const response = await openai.chat.completions.create({
+              model: "gpt-3.5-turbo",
+              messages: [
+                {
+                  role: "system",
+                  content:
+                    "You are an editor. Fix grammar, punctuation, and capitalization. Break text into paragraphs when ideas change. Output only the revised text without quotes or additional commentary."
+                },
+                { role: "user", content: punctuationPrompt }
+              ]
+            });
+      
+            const punctuatedText = response.choices[0].message.content.trim();
+            socket.emit("speechData", { transcript: punctuatedText, isFinal });
+          } catch (error) {
+            console.error("Punctuation restoration error with GPT:", error);
+            socket.emit("speechData", { transcript, isFinal });
           }
         } else {
-          console.log('Received data with unexpected format:', data);
+          socket.emit("speechData", { transcript, isFinal });
         }
-      });
+      });      
   });
 
   socket.on('sendAudioData', (audioChunk) => {
