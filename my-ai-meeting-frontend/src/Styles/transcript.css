@@ -1,0 +1,109 @@
+/* Container for the entire note taker */
+.transcript-container {
+  height: 100%;      /* Ensure it fills the parent panel's height */
+  overflow: hidden;  /* Hide any overflow from the container */
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+}
+
+/* Header row: stays at the top */
+.transcript-header {
+  flex-shrink: 0;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+/* Title styling */
+.transcript-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* adjust spacing as needed */
+}
+
+
+/* Mic icon styling */
+.mic-icon {
+  cursor: pointer;
+  font-size: 1.8rem;
+}
+
+.meeting-icon {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.meeting-icon svg {
+  font-size: 2.5rem; /* Adjust size as needed */
+}
+
+.meeting-icon.active svg {
+  fill: var(--color-primary);
+}
+
+.meeting-icon.disabled svg {
+  fill: var(--color-bg3);
+}
+
+.meeting-icon:hover {
+  opacity: 0.8;
+}
+
+.transcript-display {
+  flex: 1;
+  overflow-y: auto;
+
+  /* For Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-bg2) transparent;
+
+}
+
+/* For WebKit browsers (Chrome, Safari) */
+.transcript-display::-webkit-scrollbar {
+  width: 8px;
+}
+
+.transcript-display::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.transcript-display::-webkit-scrollbar-thumb {
+  background-color: var(--color-bg2);
+  border-radius: 4px;
+  border: 2px solid transparent;
+}
+
+/* Remove specific scrollbar buttons */
+.transcript-display::-webkit-scrollbar-button:start:decrement,
+.transcript-display::-webkit-scrollbar-button:end:increment {
+  display: none;
+  -webkit-appearance: none;
+}
+
+/* Transcript box styles for each paragraph */
+.transcript-box {
+  width: 100%;
+  overflow-x: hidden;
+  border-radius: 4px;
+}
+
+.transcript-box pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-text);
+}

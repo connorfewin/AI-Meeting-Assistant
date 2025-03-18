@@ -1,0 +1,51 @@
+/* Container for the entire note taker */
+.notes-container {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+}
+.notes-header {
+  flex-shrink: 0;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  }
+  
+  .notes-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  
+/* Override MUI defaults with a custom class */
+.notes-button, .notes-cancel-button {
+  font-family: 'Inter', sans-serif !important;  
+  border-radius: 7px !important;
+  box-shadow: none;
+}
+
+/* Custom styles for the primary variant */
+.notes-button.MuiButton-containedPrimary {
+  background-color: var(--color-primary) !important; /* your primary color */
+  color: #ffffff !important; /* text color */
+}
+
+/* Custom styles for the primary variant */
+.notes-button.MuiButton-outlinedPrimary {
+  color: var(--color-primary) !important; /* your primary color */
+  border: #ffffff;
+}
+
+/* Custom styles for the secondary variant */
+.notes-button.MuiButton-containedSecondary {
+  background-color: var(--color-bg2) !important; /* your secondary color */
+  color: #ffffff !important;
+}
+
+/* Hover effects (if you want to change them) */
+.notes-button:hover {
+  background-color: var(--color-bg3) !important; /* hover background color */
+}

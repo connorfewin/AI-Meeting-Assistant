@@ -46,13 +46,12 @@
   border-radius: 15px;
   background-color: var(--color-bg1);
   box-sizing: border-box;
-  overflow: auto;     /* internal scrolling if needed */
 }
 
 /* Gap (margin) only on the second panel */
-/* .panel.note-taker {
+.panel.notes {
   margin-left: 10px;
-} */
+}
 
 h1 {
   color: var(--color-text);
