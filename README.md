@@ -38,15 +38,21 @@
 
 ---
 
-## **5. Note Taking**
-- [ ] Use previous paragraph to reduce redundancy in notes
-- [ ] Add ability to combine paragraphs
-- [ ] Optimize GPT prompts to get better notes.
+## **5.1: Video Recording/Lecture**
+- [ ] Record audio in one long succession
+- [ ] Punctuate in bulk (on pause of audio (pausing video))
+- [ ] Handle long pauses without recorded audio (might be a bug)
+
+## **5.2: Lecture Notes**
+- [ ] Punctuated transcript with broken up paragraphs
+- [ ] Sperate each paragraph into an array of paragraphs
+- [ ] Summarize each paragraph in a notes style
+- [ ] Copy notes button
 
 
 ---
 
-## **6. Speaker Identification** 
+## **6. Meeting** 
 - [x] Capture audio from meetings / videos (Screen share capture)
 - [ ] Tag transcriptions with speaker labels.
 - [ ] Ensure correct speaker attribution for both summarization and AI queries.
