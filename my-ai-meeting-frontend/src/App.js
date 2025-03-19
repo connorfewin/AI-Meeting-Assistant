@@ -3,8 +3,8 @@ import React from "react";
 import "./App.css";
 import { Header } from "./Components/Header";
 import { TheBrain } from "./Components/TheBrain";
-import { Transcript } from "./Components/Transcript";
 import { Notes } from "./Components/Notes";
+import { LectureTranscript } from "./Components/LectureTranscript";
 
 function App() {
   return (
@@ -17,7 +17,7 @@ function App() {
           <TheBrain />
         </div> */}
         <div className="panel transcript">
-          <Transcript />
+          <LectureTranscript />
         </div>
         <div className="panel notes">
           <Notes />

@@ -44,7 +44,8 @@
 }
 
 .meeting-icon svg {
-  font-size: 2.5rem; /* Adjust size as needed */
+  font-size: 1.8rem; /* Adjust size as needed */
+  margin: auto;
 }
 
 .meeting-icon.active svg {
