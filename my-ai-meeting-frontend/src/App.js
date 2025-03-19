@@ -1,5 +1,5 @@
 // src/App.js
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import { Header } from "./Components/Header";
 import { TheBrain } from "./Components/TheBrain";
@@ -7,6 +7,11 @@ import { Notes } from "./Components/Notes";
 import { LectureTranscript } from "./Components/LectureTranscript";
 
 function App() {
+  
+  const [lectureParagraphs, setLectureParagraphs] = useState([]); // each item: { id, text }
+
+  useEffect(() => {console.log(lectureParagraphs.length)}, [lectureParagraphs]);
+
   return (
     <div className="App">
       <div className="header-container">
@@ -17,10 +22,10 @@ function App() {
           <TheBrain />
         </div> */}
         <div className="panel transcript">
-          <LectureTranscript />
+          <LectureTranscript lectureParagraphs={lectureParagraphs} setLectureParagraphs={setLectureParagraphs} />
         </div>
         <div className="panel notes">
-          <Notes />
+          <Notes lectureParagraphs={lectureParagraphs}/>
         </div>
       </div>
     </div>

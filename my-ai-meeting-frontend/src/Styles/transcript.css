@@ -35,7 +35,6 @@
 /* Mic icon styling */
 .mic-icon {
   cursor: pointer;
-  font-size: 1.8rem;
 }
 
 .meeting-icon {
@@ -44,7 +43,6 @@
 }
 
 .meeting-icon svg {
-  font-size: 1.8rem; /* Adjust size as needed */
   margin: auto;
 }
 
@@ -67,7 +65,6 @@
   /* For Firefox */
   scrollbar-width: thin;
   scrollbar-color: var(--color-bg2) transparent;
-
 }
 
 /* For WebKit browsers (Chrome, Safari) */
@@ -90,21 +87,4 @@
 .transcript-display::-webkit-scrollbar-button:end:increment {
   display: none;
   -webkit-appearance: none;
-}
-
-/* Transcript box styles for each paragraph */
-.transcript-box {
-  width: 100%;
-  overflow-x: hidden;
-  border-radius: 4px;
-}
-
-.transcript-box pre {
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  margin: 0;
-  font-family: 'Inter', sans-serif;
-  font-size: 1rem;
-  line-height: 1.6;
-  color: var(--color-text);
 }

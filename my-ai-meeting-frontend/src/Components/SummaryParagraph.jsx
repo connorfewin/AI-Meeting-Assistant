@@ -1,9 +1,9 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
 
-export const TranscriptParagraph = ({ text }) => {
+export const SummaryParagraph = ({ text }) => {
   return (
-    <div className="transcript-paragraph">
+    <div className="notes-paragraph">
       <ReactMarkdown>{text}</ReactMarkdown>
     </div>
   );

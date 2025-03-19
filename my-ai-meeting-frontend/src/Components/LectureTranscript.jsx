@@ -1,3 +1,4 @@
+// src/Components/LectureTranscript.jsx
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import MicIcon from "@mui/icons-material/Mic";
 import MicOffIcon from "@mui/icons-material/MicOff";
@@ -8,13 +9,13 @@ import "../Styles/transcript.css";
 import { useSpeechRecognition } from "../hooks/useSpeechRecognition";
 
 /** 
- * Helper function to fetch punctuated text from server, then split it into paragraphs
+ * Helper function to fetch punctuated text from server, then split it into lectureParagraphs
  * @param {string} text - The raw, unpunctuated text
- * @returns {string[]} an array of split paragraphs
+ * @returns {string[]} an array of split lectureParagraphs
  */
 async function fetchAndSplitPunctuatedText(text) {
-  const url = `${process.env.REACT_APP_SOCKET_URL}/api/punctuate`; 
-  // if REACT_APP_SOCKET_URL isn’t set or you’re on the same server, you can just do "/api/punctuate"
+  const url = `${process.env.REACT_APP_SOCKET_URL}/api/punctuate`;
+  // If REACT_APP_SOCKET_URL isn’t set or you’re on the same server, you can just do "/api/punctuate"
 
   const res = await fetch(url, {
     method: "POST",
@@ -23,7 +24,6 @@ async function fetchAndSplitPunctuatedText(text) {
   });
   
   if (!res.ok) {
-    // Throw an error to be caught in the component
     throw new Error(`Failed to punctuate text. Status: ${res.status}`);
   }
 
@@ -38,8 +38,7 @@ async function fetchAndSplitPunctuatedText(text) {
   return splitted;
 }
 
-export const LectureTranscript = () => {
-  const [paragraphs, setParagraphs] = useState([]); // each item: { id, text, loading }
+export const LectureTranscript = ({ lectureParagraphs, setLectureParagraphs }) => {
   const [currentParagraph, setCurrentParagraph] = useState("");
   const [currentInterim, setCurrentInterim] = useState("");
   const [micOn, setMicOn] = useState(false);
@@ -51,69 +50,51 @@ export const LectureTranscript = () => {
   const currentInterimRef = useRef("");
   const pauseTimerRef = useRef(null);
 
-  useEffect(() => {console.log(paragraphs.length)}, paragraphs);
   useEffect(() => {
     currentParagraphRef.current = currentParagraph;
     currentInterimRef.current = currentInterim;
   }, [currentParagraph, currentInterim]);
 
-  const handleSpeechData = useCallback(({ transcript, isFinal }) => {
-    // As partial transcripts arrive, we store them in either currentParagraph or currentInterim
-    if (isFinal) {
-      setCurrentParagraph((prev) => prev + transcript.trim() + " ");
-      setCurrentInterim("");
-    } else {
-      setCurrentInterim(transcript);
-    }
-
-    // Clear any existing pause timer before restarting it
-    clearTimeout(pauseTimerRef.current);
-
-    pauseTimerRef.current = setTimeout(async () => {
-      const combined = (currentParagraphRef.current + currentInterimRef.current).trim();
-      if (!combined) return;
-
-      // Create one temporary "skeleton" paragraph while we wait for punctuation
-      const skeletonParagraph = {
-        id: Date.now(),
-        text: combined,
-        loading: true,
-      };
-      setParagraphs((prev) => [...prev, skeletonParagraph]);
-
-      // Reset the current text
-      setCurrentParagraph("");
-      setCurrentInterim("");
-
-      try {
-        // Fetch the punctuated text & split into paragraphs
-        const splittedParagraphs = await fetchAndSplitPunctuatedText(combined);
-
-        // Replace the skeleton paragraph with the newly split paragraphs
-        setParagraphs((prev) =>
-          prev.flatMap((p) => {
-            if (p.id === skeletonParagraph.id) {
-              return splittedParagraphs.map((paraText, idx) => ({
-                id: `${skeletonParagraph.id}-${idx}`,
-                text: paraText,
-                loading: false,
-              }));
-            }
-            return [p];
-          })
-        );
-      } catch (error) {
-        console.error("Error punctuating text:", error);
-
-        // Mark the skeleton paragraph as done (no punctuation)
-        setParagraphs((prev) =>
-          prev.map((p) =>
-            p.id === skeletonParagraph.id ? { ...p, loading: false } : p
-          )
-        );
+  const handleSpeechData = useCallback(
+    ({ transcript, isFinal }) => {
+      if (isFinal) {
+        setCurrentParagraph((prev) => prev + transcript.trim() + " ");
+        setCurrentInterim("");
+      } else {
+        setCurrentInterim(transcript);
       }
-    }, 2000);
-  }, []);
+
+      clearTimeout(pauseTimerRef.current);
+
+      pauseTimerRef.current = setTimeout(async () => {
+        const combined = (currentParagraphRef.current + currentInterimRef.current).trim();
+        if (!combined) return;
+
+        // Clear the current text immediately
+        setCurrentParagraph("");
+        setCurrentInterim("");
+
+        try {
+          const splittedParagraphs = await fetchAndSplitPunctuatedText(combined);
+          setLectureParagraphs((prev) => [
+            ...prev,
+            ...splittedParagraphs.map((paraText, idx) => ({
+              id: `${Date.now()}-${idx}`,
+              text: paraText,
+            })),
+          ]);
+        } catch (error) {
+          console.error("Error punctuating text:", error);
+          // On error, simply append the combined text as a single paragraph
+          setLectureParagraphs((prev) => [
+            ...prev,
+            { id: Date.now(), text: combined, loading: false },
+          ]);
+        }
+      }, 2000);
+    },
+    [setLectureParagraphs]
+  );
 
   // This hook manages the Google speech recognition WebSocket logic
   const { stopRecording } = useSpeechRecognition(
@@ -123,7 +104,7 @@ export const LectureTranscript = () => {
     setMeetingOn
   );
 
-  // Whenever paragraphs update, scroll the transcript to the bottom
+  // Scroll the transcript display to the bottom whenever lectureParagraphs change
   useEffect(() => {
     if (transcriptDisplayRef.current) {
       transcriptDisplayRef.current.scrollTo({
@@ -131,9 +112,8 @@ export const LectureTranscript = () => {
         behavior: "smooth",
       });
     }
-  }, [paragraphs, currentParagraph, currentInterim]);
+  }, [lectureParagraphs, currentParagraph, currentInterim]);
 
-  // Simple toggles for UI
   const toggleMic = () => setMicOn((prev) => !prev);
   const toggleMeeting = () => setMeetingOn((prev) => !prev);
 
@@ -155,7 +135,11 @@ export const LectureTranscript = () => {
             onMouseEnter={() => setHoverMeeting(true)}
             onMouseLeave={() => setHoverMeeting(false)}
           >
-            {hoverMeeting || meetingOn ? <RadioButtonCheckedIcon /> : <RadioButtonUncheckedIcon />}
+            {hoverMeeting || meetingOn ? (
+              <RadioButtonCheckedIcon />
+            ) : (
+              <RadioButtonUncheckedIcon />
+            )}
           </div>
           <div className="mic-icon" onClick={toggleMic}>
             {micOn ? <MicIcon /> : <MicOffIcon />}
@@ -164,19 +148,17 @@ export const LectureTranscript = () => {
       </div>
 
       <div className="transcript-display" ref={transcriptDisplayRef}>
-        {paragraphs.map((para) => (
+        {lectureParagraphs.map((para) => (
           <TranscriptParagraph
             key={para.id}
             text={para.text}
-            inProgress={para.loading}
           />
         ))}
 
-        {/* Show the interim paragraph in-progress if the user is still speaking */}
+        {/* Show the interim paragraph if the user is still speaking */}
         {(currentParagraph || currentInterim) && (
           <TranscriptParagraph
             text={(currentParagraph + currentInterim).trim()}
-            inProgress={false}
           />
         )}
       </div>
