@@ -39,15 +39,16 @@
 ---
 
 ## **5.1: Video Recording/Lecture**
-- [ ] Record audio in one long succession
-- [ ] Punctuate in bulk (on pause of audio (pausing video))
-- [ ] Handle long pauses without recorded audio (might be a bug)
+- [x] Record audio in one long succession
+- [x] Punctuate in bulk (on pause of audio (pausing video))
+- [x] Handle long pauses without recorded audio (might be a bug)
 
 ## **5.2: Lecture Notes**
-- [ ] Punctuated transcript with broken up paragraphs
-- [ ] Sperate each paragraph into an array of paragraphs
+- [x] Punctuated transcript with broken up paragraphs
+- [x] Sperate each paragraph into an array of paragraphs
 - [ ] Summarize each paragraph in a notes style
-- [ ] Copy notes button
+- [ ] Highlight corresponding transcript paragraph hovering notes
+    - [ ] Auto focus for transcript
 
 
 ---
