@@ -48,7 +48,7 @@
 - [x] Sperate each paragraph into an array of paragraphs
 - [x] Summarize each paragraph in a notes style
 - [ ] Improve Summarization prompt (more concise)
-- [ ] Only summarize new paragraphs (keep track of paragraphs that have been summarized)
+- [x] Only summarize new paragraphs (keep track of paragraphs that have been summarized)
 - [ ] Highlight corresponding transcript paragraph hovering notes
     - [ ] Auto focus for transcript
 
