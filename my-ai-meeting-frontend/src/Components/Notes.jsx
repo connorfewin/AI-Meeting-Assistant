@@ -2,15 +2,17 @@ import React, { useState, useEffect } from "react";
 import "../Styles/notes.css";
 import { SummaryParagraph } from "./SummaryParagraph";
 
-export const Notes = ({ lectureParagraphs }) => {
+export const Notes = ({ lectureParagraphs, hoverId, setHoverId, hoverEnabled }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [summaryParagraphs, setSummaryParagraphs] = useState([]); // each item: { id, text, summarized: true }
   const [progress, setProgress] = useState(0);
   const [totalNewParagraphs, setTotalNewParagraphs] = useState(0);
+  const [regenerationCounter, setRegenerationCounter] = useState(0);
 
+  // This effect runs whenever lectureParagraphs change or when regeneration is triggered.
   useEffect(() => {
     const summarizeLectureParagraphs = async () => {
-      // Create a Set of IDs for paragraphs already summarized.
+      // Build a Set of IDs for paragraphs already summarized.
       const summarizedIds = new Set(summaryParagraphs.map((p) => p.id));
 
       // Filter for only new paragraphs that haven't been summarized yet.
@@ -68,17 +70,34 @@ export const Notes = ({ lectureParagraphs }) => {
     } else {
       setSummaryParagraphs([]);
     }
-  }, [lectureParagraphs]);
+  }, [lectureParagraphs, regenerationCounter]);
+
+  // Handler for the regenerate button.
+  const handleRegenerate = () => {
+    // Clear the summaries and trigger the effect to run again.
+    setSummaryParagraphs([]);
+    setRegenerationCounter((prev) => prev + 1);
+  };
 
   return (
     <div className="notes-container">
       <div className="notes-header">
         <h1 className="notes-title">Notes</h1>
+        <button onClick={handleRegenerate} className="regenerate-button">
+          Regenerate Notes
+        </button>
       </div>
       <div className="notes-display">
-        {/* Always display summarized paragraphs */}
+        {/* Always display already summarized paragraphs */}
         {summaryParagraphs.map((para) => (
-          <SummaryParagraph key={para.id} text={para.text} />
+          <SummaryParagraph
+            key={para.id}
+            id={para.id}
+            text={para.text}
+            hoverId={hoverId}
+            setHoverId={setHoverId}
+            hoverEnabled={hoverEnabled}
+          />
         ))}
         {/* If new paragraphs are being summarized, show a loading indicator below */}
         {isLoading && (

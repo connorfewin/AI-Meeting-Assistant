@@ -1,0 +1,5 @@
+/* src/Styles/summaryParagraph.css or a global stylesheet */
+.summary-paragraph.active,
+.lecture-paragraph.active {
+  color: var(--color-highlight); /* light yellow for highlighting */
+}

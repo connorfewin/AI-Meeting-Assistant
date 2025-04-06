@@ -5,6 +5,7 @@
   --color-bg3: #a1a292;
   --color-primary: #609173;
   --color-text: #535345;
+  --color-highlight: #000;
 }
 
 /* Base body styles (light by default) */
@@ -23,4 +24,5 @@ body {
   --color-bg3: #444444;
   --color-primary: #4a7b62;
   --color-text: #cccccc;
+  --color-highlight: #fff;
 }

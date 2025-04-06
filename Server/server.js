@@ -26,7 +26,16 @@ app.post('/api/summarize', async (req, res) => {
   console.log("Summarize request received");
 
   try {
-    const prompt = `Simplify and organize the following text into a concise summary:\n\n${text}\n\nSummary:`;
+    // The prompt now explicitly asks for a clean bullet point list with indented sub-points.
+    const prompt = `Summarize the following text into a concise, well-organized bullet point list.
+- Use only bullet points.
+- Indent sub-bullets to group related ideas.
+- Keep the summary visually structured and free of unnecessary language.
+
+Text:
+${text}
+
+Summary:`;
 
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
@@ -34,15 +43,15 @@ app.post('/api/summarize', async (req, res) => {
         {
           role: "assistant",
           content:
-            "You are an efficient note-taker. Capture key points, decisions, and action items accurately. " +
-            "Simplify and organize discussions for quick catch-up. Use clear structure but avoid fluff—headers when useful, " +
-            "bullets for clarity, and concise phrasing. No filler words, just essential takeaways. Don't make new paragraphs just for quotations."
+            "You are an expert note-taker. Your task is to transform any input text into a clean, bullet point summary. " +
+            "Generate output strictly using bullet points, and for related sub-ideas, use indented sub-bullets. " +
+            "Ensure that your response is concise, visually structured, and free of any extra narrative or fluff."
         },
         { role: "user", content: prompt }
       ],
     });
 
-    // GPT responses with an object like { role: "...", content: "..." }
+    // GPT responds with an object like { role: "...", content: "..." }
     const summary = response.choices[0].message;
     res.json({ summary });
   } catch (error) {
@@ -50,6 +59,7 @@ app.post('/api/summarize', async (req, res) => {
     res.status(500).json({ error: "Failed to summarize text" });
   }
 });
+
 
 // ===========================
 //  /api/developer Endpoint

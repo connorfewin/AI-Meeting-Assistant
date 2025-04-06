@@ -22,7 +22,7 @@ async function fetchAndSplitPunctuatedText(text) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ text }),
   });
-  
+
   if (!res.ok) {
     throw new Error(`Failed to punctuate text. Status: ${res.status}`);
   }
@@ -38,7 +38,7 @@ async function fetchAndSplitPunctuatedText(text) {
   return splitted;
 }
 
-export const LectureTranscript = ({ lectureParagraphs, setLectureParagraphs }) => {
+export const LectureTranscript = ({ lectureParagraphs, setLectureParagraphs, hoverId, setHoverId, hoverEnabled, setHoverEnabled }) => {
   const [currentParagraph, setCurrentParagraph] = useState("");
   const [currentInterim, setCurrentInterim] = useState("");
   const [micOn, setMicOn] = useState(false);
@@ -104,14 +104,29 @@ export const LectureTranscript = ({ lectureParagraphs, setLectureParagraphs }) =
     setMeetingOn
   );
 
+  useEffect(() => {
+    if(currentParagraph === "" && currentInterim === "") {
+        if (!hoverEnabled) {
+          console.log("Enable Hover!")
+          setHoverEnabled(true)
+        }
+    } else {
+      if (hoverEnabled) {
+        console.log("Disable Hover!");
+        setHoverEnabled(false);
+      }
+    }
+  }, [currentInterim, currentParagraph, hoverEnabled, setHoverEnabled]);
+
   // Scroll the transcript display to the bottom whenever lectureParagraphs change
   useEffect(() => {
     if (transcriptDisplayRef.current) {
+      if(hoverEnabled) setHoverEnabled(false);
       transcriptDisplayRef.current.scrollTo({
         top: transcriptDisplayRef.current.scrollHeight,
         behavior: "smooth",
       });
-    }
+    } 
   }, [lectureParagraphs, currentParagraph, currentInterim]);
 
   const toggleMic = () => setMicOn((prev) => !prev);
@@ -151,7 +166,11 @@ export const LectureTranscript = ({ lectureParagraphs, setLectureParagraphs }) =
         {lectureParagraphs.map((para) => (
           <TranscriptParagraph
             key={para.id}
+            id={para.id}
             text={para.text}
+            hoverId={hoverId}
+            setHoverId={setHoverId}
+            hoverEnabled={hoverEnabled}
           />
         ))}
 
@@ -159,6 +178,9 @@ export const LectureTranscript = ({ lectureParagraphs, setLectureParagraphs }) =
         {(currentParagraph || currentInterim) && (
           <TranscriptParagraph
             text={(currentParagraph + currentInterim).trim()}
+            hoverId={hoverId}
+            setHoverId={setHoverId}
+            hoverEnabled={hoverEnabled}
           />
         )}
       </div>
