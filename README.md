@@ -47,10 +47,11 @@
 - [x] Punctuated transcript with broken up paragraphs
 - [x] Sperate each paragraph into an array of paragraphs
 - [x] Summarize each paragraph in a notes style
-- [ ] Improve Summarization prompt (more concise)
+- [x] Improve Summarization prompt (more concise)
 - [x] Only summarize new paragraphs (keep track of paragraphs that have been summarized)
 - [x] Highlight corresponding transcript paragraph hovering notes
-- [ ] Auto focus for transcript
+- [ ] Auto focus for transcript highlight mode
+- [ ] Written mode vs bullet toggle
 
 
 ---
