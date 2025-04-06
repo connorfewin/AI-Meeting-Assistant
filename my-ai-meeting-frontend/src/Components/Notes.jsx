@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../Styles/notes.css";
 import { SummaryParagraph } from "./SummaryParagraph";
+import CachedIcon from '@mui/icons-material/Cached';
 
 export const Notes = ({ lectureParagraphs, hoverId, setHoverId, hoverEnabled }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -83,9 +84,9 @@ export const Notes = ({ lectureParagraphs, hoverId, setHoverId, hoverEnabled }) 
     <div className="notes-container">
       <div className="notes-header">
         <h1 className="notes-title">Notes</h1>
-        <button onClick={handleRegenerate} className="regenerate-button">
-          Regenerate Notes
-        </button>
+        <div className="regenerate-icon" onClick={handleRegenerate}>
+          <CachedIcon />
+        </div>
       </div>
       <div className="notes-display">
         {/* Always display already summarized paragraphs */}

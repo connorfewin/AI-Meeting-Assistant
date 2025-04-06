@@ -26,16 +26,22 @@ app.post('/api/summarize', async (req, res) => {
   console.log("Summarize request received");
 
   try {
-    // The prompt now explicitly asks for a clean bullet point list with indented sub-points.
-    const prompt = `Summarize the following text into a concise, well-organized bullet point list.
-- Use only bullet points.
-- Indent sub-bullets to group related ideas.
-- Keep the summary visually structured and free of unnecessary language.
+    // A new prompt that emphasizes ultra-readable bullet points,
+    // minimal text, and rapid consumption of essential information.
+    const prompt = `
+Summarize the following text into a laser-focused, ultra-readable bullet point list:
+• Aim for minimal words and maximum clarity.
+• Keep each bullet to one main idea.
+• Indent sub-bullets for related or supporting points.
+• Eliminate filler phrases or lengthy transitions.
+• Use consistent symbols or dashes to visually separate ideas.
+• Provide an instant-grab of key facts and insights.
 
 Text:
 ${text}
 
-Summary:`;
+Lightning-Fast Summary:
+`;
 
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
@@ -43,15 +49,14 @@ Summary:`;
         {
           role: "assistant",
           content:
-            "You are an expert note-taker. Your task is to transform any input text into a clean, bullet point summary. " +
-            "Generate output strictly using bullet points, and for related sub-ideas, use indented sub-bullets. " +
-            "Ensure that your response is concise, visually structured, and free of any extra narrative or fluff."
+            "You are an unstoppable summarizer. Transform any text into short, rapid-fire bullet points. " +
+            "Place closely related details as indented sub-bullets. No fluff or filler—just clean, minimal lines " +
+            "that let someone skim and grasp the essentials in seconds. No new lines between points and their sub points."
         },
         { role: "user", content: prompt }
       ],
     });
 
-    // GPT responds with an object like { role: "...", content: "..." }
     const summary = response.choices[0].message;
     res.json({ summary });
   } catch (error) {
