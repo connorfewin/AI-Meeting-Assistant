@@ -51,7 +51,8 @@
 - [x] Only summarize new paragraphs (keep track of paragraphs that have been summarized)
 - [x] Highlight corresponding transcript paragraph hovering notes
 - [x] Auto focus for transcript highlight mode
-- [ ] Written mode vs bullet toggle
+- [ ] Copy notes to clipboard
+- [ ] Written mode (reads more like a story) vs bullet toggle
 
 
 ---
