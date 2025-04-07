@@ -50,7 +50,7 @@
 - [x] Improve Summarization prompt (more concise)
 - [x] Only summarize new paragraphs (keep track of paragraphs that have been summarized)
 - [x] Highlight corresponding transcript paragraph hovering notes
-- [ ] Auto focus for transcript highlight mode
+- [x] Auto focus for transcript highlight mode
 - [ ] Written mode vs bullet toggle
 
 
