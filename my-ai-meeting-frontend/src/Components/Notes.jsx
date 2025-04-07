@@ -106,7 +106,7 @@ export const Notes = ({
               {copySuccess ? <CheckCircleIcon className="copy-check" /> : <ContentCopyIcon />}
             </div>
           </Tooltip>
-          <Tooltip title="Regenerate notes">
+          <Tooltip title="Regenerate Notes">
             <div className="regenerate-icon" onClick={handleRegenerate}>
               <CachedIcon />
             </div>
