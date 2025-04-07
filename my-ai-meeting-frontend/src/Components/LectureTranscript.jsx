@@ -4,6 +4,7 @@ import MicIcon from "@mui/icons-material/Mic";
 import MicOffIcon from "@mui/icons-material/MicOff";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
+import Tooltip from '@mui/material/Tooltip';
 import { TranscriptParagraph } from "./TranscriptParagraph";
 import "../Styles/transcript.css";
 import { useSpeechRecognition } from "../hooks/useSpeechRecognition";
@@ -105,11 +106,11 @@ export const LectureTranscript = ({ lectureParagraphs, setLectureParagraphs, hov
   );
 
   useEffect(() => {
-    if(currentParagraph === "" && currentInterim === "") {
-        if (!hoverEnabled) {
-          console.log("Enable Hover!")
-          setHoverEnabled(true)
-        }
+    if (currentParagraph === "" && currentInterim === "") {
+      if (!hoverEnabled) {
+        console.log("Enable Hover!")
+        setHoverEnabled(true)
+      }
     } else {
       if (hoverEnabled) {
         console.log("Disable Hover!");
@@ -121,12 +122,12 @@ export const LectureTranscript = ({ lectureParagraphs, setLectureParagraphs, hov
   // Scroll the transcript display to the bottom whenever lectureParagraphs change
   useEffect(() => {
     if (transcriptDisplayRef.current) {
-      if(hoverEnabled) setHoverEnabled(false);
+      if (hoverEnabled) setHoverEnabled(false);
       transcriptDisplayRef.current.scrollTo({
         top: transcriptDisplayRef.current.scrollHeight,
         behavior: "smooth",
       });
-    } 
+    }
   }, [lectureParagraphs, currentParagraph, currentInterim]);
 
   const toggleMic = () => setMicOn((prev) => !prev);
@@ -144,21 +145,25 @@ export const LectureTranscript = ({ lectureParagraphs, setLectureParagraphs, hov
       <div className="transcript-header">
         <h1 className="transcript-title">Lecture Transcript</h1>
         <div className="controls">
-          <div
-            className={`meeting-icon ${meetingOn ? "active" : "disabled"}`}
-            onClick={toggleMeeting}
-            onMouseEnter={() => setHoverMeeting(true)}
-            onMouseLeave={() => setHoverMeeting(false)}
-          >
-            {hoverMeeting || meetingOn ? (
-              <RadioButtonCheckedIcon />
-            ) : (
-              <RadioButtonUncheckedIcon />
-            )}
-          </div>
-          <div className="mic-icon" onClick={toggleMic}>
-            {micOn ? <MicIcon /> : <MicOffIcon />}
-          </div>
+          <Tooltip title={!meetingOn ? "Record Video" : "Stop Recording"}>
+            <div
+              className={`meeting-icon ${meetingOn ? "active" : "disabled"}`}
+              onClick={toggleMeeting}
+              onMouseEnter={() => setHoverMeeting(true)}
+              onMouseLeave={() => setHoverMeeting(false)}
+            >
+              {hoverMeeting || meetingOn ? (
+                <RadioButtonCheckedIcon />
+              ) : (
+                <RadioButtonUncheckedIcon />
+              )}
+            </div>
+          </Tooltip>
+          <Tooltip title={micOn ? "Turn Mic Off" : "Turn Mic On"}>
+            <div className="mic-icon" onClick={toggleMic}>
+              {micOn ? <MicIcon /> : <MicOffIcon />}
+            </div>
+          </Tooltip>
         </div>
       </div>
 

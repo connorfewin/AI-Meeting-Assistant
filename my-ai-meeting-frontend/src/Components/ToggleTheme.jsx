@@ -1,4 +1,5 @@
 // src/Components/ToggleTheme.js
+import { Tooltip } from "@mui/material";
 import React, { useState, useEffect } from "react";
 // Optionally import icons from a library like react-icons
 import { FaSun, FaMoon } from "react-icons/fa";
@@ -21,8 +22,10 @@ export const ToggleTheme = () => {
   };
 
   return (
+    <Tooltip title={!isDark ? "Dark Mode" : "Light Mode"}>
     <div className="toggle-theme" onClick={toggleTheme}>
       {isDark ? <FaSun size={24} /> : <FaMoon size={24} />}
     </div>
+    </Tooltip>
   );
 };
