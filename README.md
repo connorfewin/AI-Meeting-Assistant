@@ -52,7 +52,6 @@
 - [x] Highlight corresponding transcript paragraph hovering notes
 - [x] Auto focus for transcript highlight mode
 - [x] Copy notes to clipboard
-- [ ] Written mode (reads more like a story) vs bullet toggle
 
 
 ---
