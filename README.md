@@ -77,3 +77,4 @@
 ## Bugs
 - [x] Meeting mode doubles the text
 - [x] Control pannel should stay at the top when there is y-overflow
+- [ ] Transcript paragraphs disapears while getting punctuated
