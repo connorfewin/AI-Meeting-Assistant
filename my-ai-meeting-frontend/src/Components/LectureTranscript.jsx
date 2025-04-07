@@ -38,7 +38,7 @@ async function fetchAndSplitPunctuatedText(text) {
   return splitted;
 }
 
-export const LectureTranscript = ({ lectureParagraphs, setLectureParagraphs, hoverId, setHoverId, hoverEnabled, setHoverEnabled }) => {
+export const LectureTranscript = ({ lectureParagraphs, setLectureParagraphs, hoverId, setHoverId, hoverEnabled, setHoverEnabled, hoverSource, setHoverSource }) => {
   const [currentParagraph, setCurrentParagraph] = useState("");
   const [currentInterim, setCurrentInterim] = useState("");
   const [micOn, setMicOn] = useState(false);
@@ -171,6 +171,8 @@ export const LectureTranscript = ({ lectureParagraphs, setLectureParagraphs, hov
             hoverId={hoverId}
             setHoverId={setHoverId}
             hoverEnabled={hoverEnabled}
+            hoverSource={hoverSource}
+            setHoverSource={setHoverSource}
           />
         ))}
 
@@ -181,6 +183,8 @@ export const LectureTranscript = ({ lectureParagraphs, setLectureParagraphs, hov
             hoverId={hoverId}
             setHoverId={setHoverId}
             hoverEnabled={hoverEnabled}
+            hoverSource={hoverSource}
+            setHoverSource={setHoverSource}
           />
         )}
       </div>

@@ -10,6 +10,7 @@ function App() {
   const [lectureParagraphs, setLectureParagraphs] = useState([]); // each item: { id, text }
   const [hoverID, setHoverID] = useState(null);
   const [hoverEnabled, setHoverEnabled] = useState(false); // Toggle state for hover functionality
+  const [hoverSource, setHoverSource] = useState(null);
 
   useEffect(() => {
     console.log(lectureParagraphs.length);
@@ -25,21 +26,25 @@ function App() {
           <TheBrain />
         </div> */}
         <div className="panel transcript">
-          <LectureTranscript
+        <LectureTranscript
             lectureParagraphs={lectureParagraphs}
             setLectureParagraphs={setLectureParagraphs}
             hoverId={hoverID}
             setHoverId={setHoverID}
             hoverEnabled={hoverEnabled}
             setHoverEnabled={setHoverEnabled}
+            hoverSource={hoverSource}
+            setHoverSource={setHoverSource}
           />
         </div>
         <div className="panel notes">
-          <Notes
+        <Notes
             lectureParagraphs={lectureParagraphs}
             hoverId={hoverID}
             setHoverId={setHoverID}
             hoverEnabled={hoverEnabled}
+            hoverSource={hoverSource}
+            setHoverSource={setHoverSource}
           />
         </div>
       </div>

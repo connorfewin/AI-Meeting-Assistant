@@ -3,7 +3,7 @@ import "../Styles/notes.css";
 import { SummaryParagraph } from "./SummaryParagraph";
 import CachedIcon from '@mui/icons-material/Cached';
 
-export const Notes = ({ lectureParagraphs, hoverId, setHoverId, hoverEnabled }) => {
+export const Notes = ({ lectureParagraphs, hoverId, setHoverId, hoverEnabled, hoverSource, setHoverSource }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [summaryParagraphs, setSummaryParagraphs] = useState([]); // each item: { id, text, summarized: true }
   const [progress, setProgress] = useState(0);
@@ -98,6 +98,8 @@ export const Notes = ({ lectureParagraphs, hoverId, setHoverId, hoverEnabled }) 
             hoverId={hoverId}
             setHoverId={setHoverId}
             hoverEnabled={hoverEnabled}
+            hoverSource={hoverSource}
+            setHoverSource={setHoverSource}
           />
         ))}
         {/* If new paragraphs are being summarized, show a loading indicator below */}
