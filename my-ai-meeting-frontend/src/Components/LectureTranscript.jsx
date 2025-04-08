@@ -31,6 +31,7 @@ async function fetchAndSplitPunctuatedText(text) {
     .filter(Boolean);
 }
 
+// Bullshit comment
 export const LectureTranscript = ({
   lectureParagraphs,
   setLectureParagraphs,
