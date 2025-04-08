@@ -5,14 +5,13 @@ import MicOffIcon from "@mui/icons-material/MicOff";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
 import YouTubeIcon from "@mui/icons-material/YouTube";
-import CircularProgress from "@mui/material/CircularProgress"; // Import CircularProgress for loading
+import CircularProgress from "@mui/material/CircularProgress";
 import Tooltip from "@mui/material/Tooltip";
 import { TranscriptParagraph } from "./TranscriptParagraph";
 import "../Styles/transcript.css";
 import { useSpeechRecognition } from "../hooks/useSpeechRecognition";
 import { YoutubeModal } from "./YoutubeModal";
 
-// Helper function to fetch punctuated text from server, then split it into lectureParagraphs
 async function fetchAndSplitPunctuatedText(text) {
   const url = `${process.env.REACT_APP_SOCKET_URL}/api/punctuate`;
   const res = await fetch(url, {
@@ -26,11 +25,10 @@ async function fetchAndSplitPunctuatedText(text) {
   }
 
   const { punctuated } = await res.json();
-  const splitted = (punctuated || text)
+  return (punctuated || text)
     .split("\n")
     .map((p) => p.trim())
     .filter(Boolean);
-  return splitted;
 }
 
 export const LectureTranscript = ({
@@ -43,16 +41,12 @@ export const LectureTranscript = ({
   hoverSource,
   setHoverSource,
 }) => {
-  // Existing state for speech and transcription
   const [currentParagraph, setCurrentParagraph] = useState("");
   const [currentInterim, setCurrentInterim] = useState("");
   const [micOn, setMicOn] = useState(false);
   const [meetingOn, setMeetingOn] = useState(false);
   const [hoverMeeting, setHoverMeeting] = useState(false);
-
-  // --- New state for YouTube modal ---
   const [youtubeModalOpen, setYoutubeModalOpen] = useState(false);
-  // --- New state for loading indicator while punctuating YouTube transcript ---
   const [youtubeLoading, setYoutubeLoading] = useState(false);
 
   const transcriptDisplayRef = useRef(null);
@@ -108,14 +102,14 @@ export const LectureTranscript = ({
   );
 
   useEffect(() => {
-    if (currentParagraph === "" && currentInterim === "") {
+    if (!currentParagraph && !currentInterim) {
       if (!hoverEnabled) {
         setHoverEnabled(true);
       }
     } else if (hoverEnabled) {
       setHoverEnabled(false);
     }
-  }, [currentInterim, currentParagraph, hoverEnabled, setHoverEnabled]);
+  }, [currentParagraph, currentInterim, hoverEnabled, setHoverEnabled]);
 
   useEffect(() => {
     if (transcriptDisplayRef.current) {
@@ -136,7 +130,6 @@ export const LectureTranscript = ({
     }
   }, [micOn, meetingOn, stopRecording]);
 
-  // Callback passed to YoutubeModal when transcript data is successfully fetched.
   const handleYoutubeTranscript = (transcriptArray) => {
     setYoutubeLoading(true);
     const transcriptText = transcriptArray.map((part) => part.text).join(" ");
@@ -191,7 +184,6 @@ export const LectureTranscript = ({
         </div>
       </div>
 
-      {/* Transcript display */}
       <div className="transcript-display" ref={transcriptDisplayRef}>
         {lectureParagraphs.map((para) => (
           <TranscriptParagraph
@@ -206,14 +198,12 @@ export const LectureTranscript = ({
           />
         ))}
 
-        {/* Show big loading indicator while processing YouTube transcript */}
         {youtubeLoading && (
           <div className="loading-indicator" style={{ textAlign: "center", margin: "2rem 0" }}>
             <CircularProgress size={60} />
           </div>
         )}
 
-        {/* Interim transcript */}
         {(currentParagraph || currentInterim) && (
           <TranscriptParagraph
             text={(currentParagraph + currentInterim).trim()}
@@ -226,7 +216,6 @@ export const LectureTranscript = ({
         )}
       </div>
 
-      {/* Render the separate YoutubeModal */}
       <YoutubeModal
         open={youtubeModalOpen}
         onClose={() => setYoutubeModalOpen(false)}
