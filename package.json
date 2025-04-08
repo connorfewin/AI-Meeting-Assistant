@@ -13,6 +13,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "openai": "^4.84.1",
-    "react-markdown": "^9.0.3"
+    "react-markdown": "^9.0.3",
+    "youtube-transcript": "^1.2.1"
   }
 }

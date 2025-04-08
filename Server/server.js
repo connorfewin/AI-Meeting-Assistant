@@ -8,13 +8,16 @@ require('dotenv').config();
 
 const { OpenAI } = require("openai");
 
+// NEW: Import the YoutubeTranscript package for fetching YouTube transcripts
+const { YoutubeTranscript } = require('youtube-transcript');
+
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 const openai = new OpenAI({
   // Replace with your own key or use process.env if you like
-  apiKey: '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', 
+  apiKey: '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',
 });
 
 // ===========================
@@ -65,7 +68,6 @@ Lightning-Fast Summary:
   }
 });
 
-
 // ===========================
 //  /api/developer Endpoint
 // ===========================
@@ -105,7 +107,7 @@ Avoid extra details.`;
 });
 
 // ===========================
-//  NEW /api/punctuate Endpoint
+//  /api/punctuate Endpoint
 // ===========================
 app.post('/api/punctuate', async (req, res) => {
   const { text } = req.body;
@@ -145,6 +147,25 @@ app.post('/api/punctuate', async (req, res) => {
   }
 });
 
+// ===========================
+//  NEW /api/youtubeTranscript Endpoint
+// ===========================
+// This endpoint accepts a videoId as a URL parameter and uses the YoutubeTranscript package 
+// to fetch the transcript on the server side (bypassing CORS issues).
+app.get('/api/youtubeTranscript/:videoId', async (req, res) => {
+  const { videoId } = req.params;
+  console.log(`Fetching transcript for videoId: ${videoId}`);
+
+  try {
+    // Fetch the transcript using the server-side YoutubeTranscript API
+    const transcriptData = await YoutubeTranscript.fetchTranscript(videoId);
+    // Wrap the returned transcript in an object for consistency
+    res.json({ transcript: transcriptData });
+  } catch (error) {
+    console.error("Error fetching YouTube transcript:", error);
+    res.status(500).json({ error: "Unable to fetch transcript" });
+  }
+});
 
 // ===========================
 //  Google Cloud Speech Setup

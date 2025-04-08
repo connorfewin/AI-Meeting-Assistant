@@ -1,0 +1,29 @@
+/* Custom styling for the modal container */
+.custom-dialog-paper {
+  background-color: #f9f9f9 !important;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Center the content in the loading state */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* Styling for successful retrieval message */
+.success-container {
+  text-align: center;
+  padding: 20px;
+}
+
+/* Styling for error messages */
+.error-text {
+  color: red;
+  margin-top: 8px;
+  font-size: 0.9rem;
+}

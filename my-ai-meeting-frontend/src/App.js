@@ -26,7 +26,7 @@ function App() {
           <TheBrain />
         </div> */}
         <div className="panel transcript">
-        <LectureTranscript
+          <LectureTranscript
             lectureParagraphs={lectureParagraphs}
             setLectureParagraphs={setLectureParagraphs}
             hoverId={hoverID}
@@ -38,7 +38,7 @@ function App() {
           />
         </div>
         <div className="panel notes">
-        <Notes
+          <Notes
             lectureParagraphs={lectureParagraphs}
             hoverId={hoverID}
             setHoverId={setHoverID}
