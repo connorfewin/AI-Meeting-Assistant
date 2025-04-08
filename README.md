@@ -54,12 +54,12 @@
 - [x] Copy notes to clipboard
 
 ## **5.3: Youtube Videos**
-- [ ] Youtube button
-- [ ] URL Upload modal
-- [ ] Fetch transcript
-- [ ] Punctuate transript
-- [ ] Display punctuated transcript
-- [ ] Get/Notes Notes
+- [x] Youtube button
+- [x] URL Upload modal
+- [x] Fetch transcript
+- [x] Punctuate transript
+- [x] Display punctuated transcript
+- [x] Get/Show Notes
 
 ## **5.4: Batch Audio Transription**
 _Googles Speech to Text has a 305 second cap on audio transcription. This causes the user to have to reshare their screen every 5 minutes. We are going to shift to using a batch transcription by capturing all the audio first and then transcribing all of it. This will save money and effort from the user_
