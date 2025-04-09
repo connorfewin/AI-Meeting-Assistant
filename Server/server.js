@@ -39,6 +39,8 @@ Summarize the following text into a laser-focused, ultra-readable bullet point l
 • Eliminate filler phrases or lengthy transitions.
 • Use consistent symbols or dashes to visually separate ideas.
 • Provide an instant-grab of key facts and insights.
+• Take up as little vertical space as possible.
+• Translate to english if necessary.
 
 Text:
 ${text}
