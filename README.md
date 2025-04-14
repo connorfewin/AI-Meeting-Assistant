@@ -1,3 +1,39 @@
+# 🧠 AI Meeting Assistant
+
+A real-time transcription and summarization assistant for meetings, lectures, and YouTube videos — powered by OpenAI and Google Cloud Speech-to-Text.
+
+---
+
+## ⚡️ What It Does
+
+The AI Meeting Assistant captures spoken audio, transcribes it in real time, and intelligently summarizes the discussion into digestible notes — all within a single unified interface.
+
+### ✍️ Key Features
+- **Live Meeting Transcription** — Real-time transcription of meetings, screen recordings, or lectures.
+- **Smart Summarization** — Each paragraph is summarized into concise notes, with hover-to-highlight functionality.
+- **AI Query Button** — Ask a follow-up question by simply speaking; get a GPT-generated answer instantly.
+- **YouTube Video Support** — Paste in a YouTube URL to fetch and summarize the transcript *(local use only)*.
+- **Lecture Mode** — Record and summarize long-form content like classes and presentations.
+- **Clean UI** — Clickable, paragraph-based transcription display. Notes copy to clipboard with one click.
+
+---
+
+## 🚀 Getting Started
+
+> **Note:** Due to limitations with YouTube's API and hosted IP addresses, YouTube transcript features only work when running the app locally.
+
+### 🛠 Requirements
+- Node.js & Yarn
+- OpenAI API Key
+- Google Cloud Speech-to-Text credentials (service account JSON)
+
+### 📦 Installation
+
+```bash
+cd ai-meeting-assistant
+yarn install
+```
+
 # AI Meeting Assistant - Development Roadmap
 
 ## **1. Core UI & Structure**
