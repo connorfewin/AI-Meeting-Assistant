@@ -80,11 +80,11 @@ _Googles Speech to Text has a 305 second cap on audio transcription. This causes
 ---
 
 ## **7. Final Optimizations & Enhancements**
-- [ ] Improve processing speed and UI responsiveness.
+- [x] Improve processing speed and UI responsiveness.
 - [x] Production version
 - [ ] Regenerate Notes Modal (Avoid Spamming)
-- [ ] Have brain build off other paragraphs for context
-- [ ] Refine GPT prompts for better summarization & query handling.
+- [x] Have brain build off other paragraphs for context
+- [x] Refine GPT prompts for better summarization & query handling.
 - [ ] Add export options (PDF, email, API integration).
 - [ ] Conduct real-world tests in live meetings.
 - [ ] Store meeting notes locally to maintain a history of discussions.
