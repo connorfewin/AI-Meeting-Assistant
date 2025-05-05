@@ -17,7 +17,7 @@ app.use(express.json());
 
 const openai = new OpenAI({
   // Replace with your own key or use process.env if you like
-  apiKey: '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',
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 // ===========================
