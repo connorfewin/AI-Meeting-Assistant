@@ -33,6 +33,25 @@ The AI Meeting Assistant captures spoken audio, transcribes it in real time, and
 cd ai-meeting-assistant
 yarn install
 ```
+# 🧪 Local Setup
+To run the AI Meeting Assistant locally, you'll need to configure environment variables for both the backend and frontend.
+
+## 🔐 Server .env File
+Create a .env file in your backend project directory:
+
+```bash
+OPENAI_API_KEY=your-openai-api-key GOOGLE_CLOUD_CREDENTIALS={"type": "service_account", "project_id":"your-project-id", "private_key": "-----BEGIN PRIVATE KEY-----\\nYOUR-PRIVATE-KEY\\n-----END PRIVATE KEY-----\\n", "client_email":"your-service-account-email", "client_id":"your-client-id", "auth_uri":"https://accounts.google.com/o/oauth2/auth", "token_uri":"https://oauth2.googleapis.com/token", "auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs", "client_x509_cert_url":"https://www.googleapis.com/robot/v1/metadata/x509/your-service-account-email", "universe_domain":"googleapis.com"}
+```
+💡 Make sure your Google service account JSON is properly escaped or parsed based on how your server loads environment variables.
+
+## 🌐 Frontend .env File
+Create a .env file in your frontend (React) project directory:
+
+```bash
+REACT_APP_SOCKET_URL=http://localhost:5000
+```
+
+🔧 Adjust the socket URL if your server is running on a different port or host.
 
 # AI Meeting Assistant - Development Roadmap
 
@@ -131,3 +150,6 @@ _Googles Speech to Text has a 305 second cap on audio transcription. This causes
 - [x] Meeting mode doubles the text
 - [x] Control pannel should stay at the top when there is y-overflow
 - [ ] Transcript paragraphs disapears while getting punctuated
+
+
+
