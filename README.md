@@ -52,7 +52,7 @@ REACT_APP_SOCKET_URL=http://localhost:5000
 ```
 
 🔧 Adjust the socket URL if your server is running on a different port or host.
-
+---
 # AI Meeting Assistant - Development Roadmap
 
 ## **1. Core UI & Structure**
